@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api"
+  baseURL: import.meta.env.VITE_API_URL || "https://hiresight-ai.onrender.com"
 });
 
 // Add a request interceptor to attach the auth token automatically
@@ -29,11 +29,14 @@ api.interceptors.response.use(
       localStorage.removeItem("token");
       // Optionally redirect to login page if we aren't already there
       if (window.location.pathname !== '/') {
-          window.location.href = '/';
+        window.location.href = '/';
       }
     }
     return Promise.reject(error);
   }
 );
+const API = process.env.NEXT_PUBLIC_API_URL;
+
+fetch(`${API}/api/data`);
 
 export default api;
