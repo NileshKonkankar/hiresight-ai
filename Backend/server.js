@@ -17,7 +17,7 @@ const app = express();
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || "http://localhost:5173",
-    "https://nileshkonkankar-hiresight-ai.vercel.app/"
+    "https://hiresight-ai-vert.vercel.app/"
   ],
   credentials: true
 }));
@@ -36,4 +36,12 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("UNCAUGHT EXCEPTION:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.error("UNHANDLED REJECTION:", err);
+});
