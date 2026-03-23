@@ -36,7 +36,7 @@ export default function Dashboard() {
   };
 
   const downloadCSV = () => {
-    window.open("http://localhost:5000/api/export/csv");
+    window.open(`${import.meta.env.VITE_API_URL || 'https://hiresight-ai.onrender.com'}/api/export/csv`);
   };
 
   const handleSort = (e) => {
