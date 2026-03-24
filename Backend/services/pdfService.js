@@ -1,11 +1,13 @@
-const pdf = require("pdf-parse");
+const pdfParse = require("pdf-parse");
 
 async function extractText(buffer) {
-
-    const data = await pdf(buffer);
-
-    return data.text;
-
+    try {
+        const data = await pdfParse(buffer);
+        return data.text;
+    } catch (error) {
+        console.error("PDF PARSE ERROR:", error.message);
+        throw new Error("Failed to parse PDF");
+    }
 }
 
 module.exports = extractText;
