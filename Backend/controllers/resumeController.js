@@ -13,13 +13,13 @@ exports.uploadResumes = async (req,res) => {
 
   for(const file of files){
 
-   const text = await extractText(file.path);
+   const text = await extractText(file.buffer);
 
    const resume = await Resume.create({
 
     recruiter: recruiterId,
     fileName: file.originalname,
-    filePath: file.path,
+    filePath: "",
     extractedText: text
 
    });
