@@ -60,4 +60,8 @@ exports.updateStatus = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 
+    if (!data.text || data.text.trim() === "") {
+        throw new Error("Empty or unsupported PDF");
+    }
+
 };
