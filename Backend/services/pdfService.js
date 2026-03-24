@@ -1,8 +1,8 @@
 const pdf = require("pdf-parse");
 
-async function extractText(dataBuffer) {
+async function extractText(buffer) {
 
-    const data = await pdf(dataBuffer);
+    const data = await pdf(buffer);
 
     return data.text;
 
