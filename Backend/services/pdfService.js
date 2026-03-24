@@ -1,10 +1,13 @@
-const pdfModule = require("pdf-parse");
-
-const pdfParse = pdfModule.default || pdfModule;
+import pdfParse from "pdf-parse";
 
 async function extractText(buffer) {
-    const data = await pdfParse(buffer);
-    return data.text;
+    try {
+        const data = await pdfParse(buffer);
+        return data.text;
+    } catch (error) {
+        console.error("PDF PARSE ERROR:", error.message);
+        throw new Error("Failed to parse PDF");
+    }
 }
 
-module.exports = extractText;
+export default extractText;
