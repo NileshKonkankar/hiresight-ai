@@ -39,7 +39,7 @@ ${resumeText}
 `;
 
   const response = await client.chat.completions.create({
-    model: "gpt-4.1-mini",
+    model: "gpt-4.1",
     messages: [
       { role: "user", content: prompt }
     ],

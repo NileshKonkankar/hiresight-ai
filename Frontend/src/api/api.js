@@ -35,8 +35,4 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-const API = process.env.NEXT_PUBLIC_API_URL;
-
-fetch(`${API}/api/data`);
-
 export default api;
