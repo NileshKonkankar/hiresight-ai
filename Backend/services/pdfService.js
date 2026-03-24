@@ -1,4 +1,4 @@
-import pdfParse from "pdf-parse";
+const pdfParse = require("pdf-parse");
 
 async function extractText(buffer) {
     try {
@@ -10,4 +10,4 @@ async function extractText(buffer) {
     }
 }
 
-export default extractText;
+module.exports = extractText;

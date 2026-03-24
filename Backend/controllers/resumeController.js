@@ -1,63 +1,63 @@
 const Resume = require("../models/Resume");
 const extractText = require("../services/pdfService");
 
-exports.uploadResumes = async (req,res) => {
+exports.uploadResumes = async (req, res) => {
 
- try{
+    try {
 
-  const recruiterId = req.user;
+        const recruiterId = req.user;
 
-  const files = req.files;
+        const files = req.files;
 
-  let savedResumes = [];
+        let savedResumes = [];
 
-  for(const file of files){
+        for (const file of files) {
 
-   const text = await extractText(file.buffer);
+            const text = await extractText(file.buffer);
 
-   const resume = await Resume.create({
+            const resume = await Resume.create({
 
-    recruiter: recruiterId,
-    fileName: file.originalname,
-    filePath: "",
-    extractedText: text
+                recruiter: recruiterId,
+                fileName: file.originalname,
+                filePath: "",
+                extractedText: text
 
-   });
+            });
 
-   savedResumes.push(resume);
+            savedResumes.push(resume);
 
-  }
+        }
 
-  res.json({
-   message: "Resumes uploaded successfully",
-   resumes: savedResumes
-  });
+        res.json({
+            message: "Resumes uploaded successfully",
+            resumes: savedResumes
+        });
 
- }catch(error){
+    } catch (error) {
 
-  res.status(500).json({
-   error:error.message
-  });
+        res.status(500).json({
+            error: error.message
+        });
 
- }
+    }
 
 };
-exports.updateStatus = async (req,res)=>{
+exports.updateStatus = async (req, res) => {
 
- try{
+    try {
 
-  const { id, status } = req.body;
+        const { id, status } = req.body;
 
-  const resume = await Resume.findByIdAndUpdate(
-   id,
-   { status },
-   { new:true }
-  );
+        const resume = await Resume.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
 
-  res.json(resume);
+        res.json(resume);
 
- }catch(error){
-  res.status(500).json({error:error.message});
- }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 
 };
