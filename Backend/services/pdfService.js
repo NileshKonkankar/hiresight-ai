@@ -1,39 +1,34 @@
-const pdfjsLib = require("pdfjs-dist");
+const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
 
 async function extractText(buffer) {
     try {
 
+        // ✅ CRITICAL: convert buffer properly
+        const uint8Array = new Uint8Array(buffer);
+
         const loadingTask = pdfjsLib.getDocument({
-            data: new Uint8Array(buffer),
-            useWorkerFetch: false,
-            isEvalSupported: false,
-            useSystemFonts: true
+            data: uint8Array
         });
 
         const pdf = await loadingTask.promise;
+        console.log("TYPE:", buffer.constructor.name);
 
-        let fullText = "";
+        let text = "";
 
         for (let i = 1; i <= pdf.numPages; i++) {
 
             const page = await pdf.getPage(i);
-            const textContent = await page.getTextContent();
+            const content = await page.getTextContent();
 
-            const pageText = textContent.items
-                .map(item => item.str)
-                .join(" ");
+            const strings = content.items.map(item => item.str);
 
-            fullText += pageText + "\n";
+            text += strings.join(" ") + "\n";
         }
 
-        if (!fullText.trim()) {
-            throw new Error("Empty PDF");
-        }
-
-        return fullText;
+        return text;
 
     } catch (error) {
-        console.error("PDFJS ERROR:", error.message);
+        console.error("PDFJS ERROR:", error);
         throw new Error("Failed to parse PDF");
     }
 }
