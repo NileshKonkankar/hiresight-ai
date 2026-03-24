@@ -8,7 +8,7 @@ const client = new OpenAI({
 
 async function analyzeResume(resumeText, jobDescription) {
 
-const prompt = `
+  const prompt = `
 You are an AI recruiter.
 
 Evaluate the candidate based on the job description.
@@ -39,7 +39,7 @@ ${resumeText}
 `;
 
   const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-4.1-mini",
     messages: [
       { role: "user", content: prompt }
     ],
