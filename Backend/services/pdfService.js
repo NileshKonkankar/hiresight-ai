@@ -1,10 +1,10 @@
-const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
+const pdfjsLib = require("pdfjs-dist");
 
 async function extractText(buffer) {
     try {
 
         const loadingTask = pdfjsLib.getDocument({
-            data: buffer,
+            data: new Uint8Array(buffer),
             useWorkerFetch: false,
             isEvalSupported: false,
             useSystemFonts: true
