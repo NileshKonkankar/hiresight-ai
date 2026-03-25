@@ -37,7 +37,7 @@ ${resumeText}
 `;
 
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
+    model: "gemini-1.5-flash-latest",
     generationConfig: { temperature: 0.3 }
   });
 
@@ -50,4 +50,4 @@ ${resumeText}
   return JSON.parse(cleaned);
 }
 
-module.exports = analyzeResume;
+module.exports = analyzeResume;
