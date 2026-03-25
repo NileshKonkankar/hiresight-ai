@@ -1,10 +1,8 @@
 require("dotenv").config();
 
-const OpenAI = require("openai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 async function analyzeResume(resumeText, jobDescription) {
 
@@ -38,17 +36,18 @@ RESUME:
 ${resumeText}
 `;
 
-  const response = await client.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      { role: "user", content: prompt }
-    ],
-    temperature: 0.3
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+    generationConfig: { temperature: 0.3 }
   });
 
-  const text = response.choices[0].message.content;
+  const result = await model.generateContent(prompt);
+  const text = result.response.text();
 
-  return JSON.parse(text);
+  // Strip markdown code fences if Gemini wraps the JSON
+  const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+  return JSON.parse(cleaned);
 }
 
-module.exports = analyzeResume;
+module.exports = analyzeResume;
