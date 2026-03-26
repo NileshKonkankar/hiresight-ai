@@ -5,12 +5,12 @@ import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/Upload";
 
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   return token ? children : <Navigate to="/" />;
 };
 
 const PublicRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   return !token ? children : <Navigate to="/dashboard" />;
 };
 
@@ -21,7 +21,7 @@ export default function App() {
         <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
-        <Route path="*" element={<Navigate to={localStorage.getItem("token") ? "/dashboard" : "/"} />} />
+        <Route path="*" element={<Navigate to={sessionStorage.getItem("token") ? "/dashboard" : "/"} />} />
       </Routes>
     </BrowserRouter>
   );

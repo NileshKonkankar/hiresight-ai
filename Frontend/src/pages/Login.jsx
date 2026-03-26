@@ -16,11 +16,11 @@ export default function Login() {
     try {
       if (isLogin) {
         const res = await api.post("/auth/login", { email, password });
-        localStorage.setItem("token", res.data.token);
+        sessionStorage.setItem("token", res.data.token);
         navigate("/dashboard");
       } else {
         const res = await api.post("/auth/register", { name, email, password });
-        localStorage.setItem("token", res.data.token);
+        sessionStorage.setItem("token", res.data.token);
         navigate("/dashboard");
       }
     } catch (error) {

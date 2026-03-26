@@ -7,7 +7,7 @@ const api = axios.create({
 // Add a request interceptor to attach the auth token automatically
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,7 +26,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // Clear token unconditionally if unauthorized
-      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
       // Optionally redirect to login page if we aren't already there
       if (window.location.pathname !== '/') {
         window.location.href = '/';
