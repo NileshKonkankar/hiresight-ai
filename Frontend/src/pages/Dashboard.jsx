@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/api";
+import ThemeToggle from "../components/ThemeToggle";
 
 export default function Dashboard() {
   const [jd, setJd] = useState("");
@@ -51,33 +52,34 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900 via-gray-950 to-black font-sans text-gray-200 pb-12 relative overflow-x-hidden">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100 via-gray-50 to-white dark:from-indigo-900 dark:via-gray-950 dark:to-black font-sans text-gray-900 dark:text-gray-200 pb-12 relative overflow-x-hidden transition-colors duration-300">
       {/* Decorative animated background elements */}
-      <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-pulse-slow pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-indigo-600/10 rounded-full mix-blend-screen filter blur-[120px] animate-pulse-slow pointer-events-none" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] animate-pulse-slow pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-indigo-400/10 dark:bg-indigo-600/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-pulse-slow pointer-events-none" style={{ animationDelay: '2s' }}></div>
 
       {/* Top Navbar */}
-      <header className="bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/50 sticky top-0 z-20">
+      <header className="bg-white/80 dark:bg-white/5 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg dark:shadow-black/50 sticky top-0 z-20 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
               <span className="text-white font-black text-sm font-display tracking-tighter">AI</span>
             </div>
-            <h1 className="text-xl font-black tracking-tight text-white font-display">HireSight<span className="text-indigo-400">.</span></h1>
+            <h1 className="text-xl font-black tracking-tight text-gray-900 dark:text-white font-display transition-colors">HireSight<span className="text-indigo-500 dark:text-indigo-400">.</span></h1>
           </div>
           <div className="flex gap-4 items-center">
             {total > 0 && (
-                <div className="hidden md:flex gap-4 text-sm font-semibold mr-2 bg-white/5 shadow-inner shadow-white/5 px-5 py-2 rounded-full border border-white/10 backdrop-blur-md">
-                    <span className="text-gray-400">Total: <span className="text-white font-bold">{total}</span></span>
-                    <span className="text-white/20">|</span>
-                    <span className="text-emerald-400">Got: <span className="font-bold">{shortlisted}</span></span>
-                    <span className="text-white/20">|</span>
-                    <span className="text-rose-400">Dropped: <span className="font-bold">{rejected}</span></span>
+                <div className="hidden md:flex gap-4 text-sm font-semibold mr-2 bg-gray-100 dark:bg-white/5 shadow-inner shadow-black/5 dark:shadow-white/5 px-5 py-2 rounded-full border border-gray-200 dark:border-white/10 backdrop-blur-md transition-colors">
+                    <span className="text-gray-500 dark:text-gray-400">Total: <span className="text-gray-900 dark:text-white font-bold">{total}</span></span>
+                    <span className="text-gray-300 dark:text-white/20">|</span>
+                    <span className="text-emerald-600 dark:text-emerald-400">Got: <span className="font-bold">{shortlisted}</span></span>
+                    <span className="text-gray-300 dark:text-white/20">|</span>
+                    <span className="text-rose-600 dark:text-rose-400">Dropped: <span className="font-bold">{rejected}</span></span>
                 </div>
             )}
+            <ThemeToggle />
             <button 
                 onClick={() => navigate("/upload")}
-                className="text-sm font-semibold text-indigo-300 hover:text-white bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 px-4 py-2 rounded-xl transition-all duration-200"
+                className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-white bg-indigo-100 dark:bg-indigo-500/10 hover:bg-indigo-200 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/20 px-4 py-2 rounded-xl transition-all duration-200"
             >
                 Upload Resumes
             </button>
@@ -86,7 +88,7 @@ export default function Dashboard() {
                     sessionStorage.removeItem("token");
                     navigate("/");
                 }}
-                className="text-sm font-semibold text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 px-4 py-2 rounded-xl transition-all duration-200"
+                className="text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/10 border border-transparent hover:border-rose-200 dark:hover:border-rose-500/20 px-4 py-2 rounded-xl transition-all duration-200"
             >
                 Logout
             </button>
@@ -97,10 +99,10 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
         
         {/* Job Description Input Section */}
-        <div className="glass-card-dark rounded-[2rem] p-8 mb-10 animate-slide-in-right">
-          <h2 className="text-2xl font-bold mb-4 font-display text-white">Target Profile Criteria</h2>
+        <div className="glass-card rounded-[2rem] p-8 mb-10 animate-slide-in-right">
+          <h2 className="text-2xl font-bold mb-4 font-display text-gray-900 dark:text-white transition-colors">Target Profile Criteria</h2>
           <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl blur opacity-10 dark:opacity-20 group-hover:opacity-20 dark:group-hover:opacity-40 transition duration-500"></div>
             <textarea
               className="relative w-full p-5 rounded-2xl glass-input min-h-[140px]"
               placeholder="Paste your detailed job description here. The AI will semantically analyze resumes against these specific requirements..."
@@ -114,7 +116,7 @@ export default function Dashboard() {
               onClick={handleRank}
               disabled={loading || !jd.trim()}
               className={`px-8 py-3.5 rounded-xl font-bold text-white shadow-lg transition-all duration-300 flex items-center gap-2 group border border-indigo-500/50
-                ${loading || !jd.trim() ? 'opacity-50 cursor-not-allowed bg-indigo-900/50 shadow-none' : 'bg-indigo-600/80 hover:bg-indigo-500 hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] hover:-translate-y-0.5'}`}
+                ${loading || !jd.trim() ? 'opacity-50 cursor-not-allowed bg-indigo-400 dark:bg-indigo-900/50 shadow-none' : 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600/80 dark:hover:bg-indigo-500 hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] hover:-translate-y-0.5'}`}
             >
                 {loading ? (
                     <>
@@ -138,12 +140,12 @@ export default function Dashboard() {
                         onChange={handleSort}
                         className="flex-1 sm:flex-none glass-input rounded-xl px-4 py-3 text-sm font-semibold shadow-sm transition-all cursor-pointer"
                     >
-                        <option value="high" className="bg-gray-900">Score: High to Low</option>
-                        <option value="low" className="bg-gray-900">Score: Low to High</option>
+                        <option value="high" className="bg-white dark:bg-gray-900">Score: High to Low</option>
+                        <option value="low" className="bg-white dark:bg-gray-900">Score: Low to High</option>
                     </select>
                     <button
                         onClick={downloadCSV}
-                        className="bg-white/10 hover:bg-white/20 border border-white/10 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-all shadow-md flex items-center justify-center gap-2 hover:-translate-y-0.5"
+                        className="bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/20 border border-gray-300 dark:border-white/10 text-gray-800 dark:text-white px-5 py-3 rounded-xl text-sm font-semibold transition-all shadow-md flex items-center justify-center gap-2 hover:-translate-y-0.5"
                         >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         Export
@@ -155,14 +157,14 @@ export default function Dashboard() {
 
         {/* Results Section */}
         {!loading && results.length === 0 && (
-          <div className="text-center py-20 px-4 rounded-[2rem] glass-card-dark animate-fade-in-up">
-             <div className="bg-indigo-500/10 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner relative border border-indigo-500/20">
-                <div className="absolute inset-0 bg-indigo-500/20 rounded-2xl animate-ping opacity-20"></div>
-                <svg className="w-10 h-10 text-indigo-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <div className="text-center py-20 px-4 rounded-[2rem] glass-card animate-fade-in-up">
+             <div className="bg-indigo-100 dark:bg-indigo-500/10 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner relative border border-indigo-200 dark:border-indigo-500/20">
+                <div className="absolute inset-0 bg-indigo-200 dark:bg-indigo-500/20 rounded-2xl animate-ping opacity-20"></div>
+                <svg className="w-10 h-10 text-indigo-500 dark:text-indigo-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
              </div>
-             <h3 className="text-xl font-bold text-white font-display">No Candidates Analyzed</h3>
-             <p className="mt-2 text-sm text-gray-400 max-w-sm mx-auto font-medium">Upload resumes and enter a job description to see AI-ranked candidates appear here automatically.</p>
-             <button onClick={() => navigate("/upload")} className="mt-6 text-sm font-bold text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 px-6 py-2.5 rounded-full transition-colors">Go to Upload Page &rarr;</button>
+             <h3 className="text-xl font-bold text-gray-900 dark:text-white font-display transition-colors">No Candidates Analyzed</h3>
+             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-sm mx-auto font-medium transition-colors">Upload resumes and enter a job description to see AI-ranked candidates appear here automatically.</p>
+             <button onClick={() => navigate("/upload")} className="mt-6 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 bg-indigo-100 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 px-6 py-2.5 rounded-full transition-colors">Go to Upload Page &rarr;</button>
           </div>
         )}
 
@@ -170,14 +172,14 @@ export default function Dashboard() {
           {results.map((r, i) => (
             <div 
                 key={r._id} 
-                className="glass-card-dark rounded-[1.5rem] hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col group animate-fade-in-up"
+                className="glass-card rounded-[1.5rem] hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20 hover:border-indigo-300 dark:hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col group animate-fade-in-up"
                 style={{ animationDelay: `${i * 0.05}s` }}
             >
               {/* Card Header (Score / Status) */}
-              <div className="px-6 py-5 border-b border-white/10 flex justify-between items-start bg-white/5">
+              <div className="px-6 py-5 border-b border-gray-200 dark:border-white/10 flex justify-between items-start bg-gray-50/50 dark:bg-white/5 transition-colors">
                   <div className="truncate pr-4 flex-1">
-                      <h3 className="font-bold text-white truncate font-display text-lg" title={r.fileName}>{r.fileName || 'Unknown File'}</h3>
-                      <p className="text-xs font-semibold text-gray-400 mt-1 flex items-center gap-1">
+                      <h3 className="font-bold text-gray-900 dark:text-white truncate font-display text-lg transition-colors" title={r.fileName}>{r.fileName || 'Unknown File'}</h3>
+                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1 transition-colors">
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                           Analyzed recently
                       </p>
@@ -185,9 +187,9 @@ export default function Dashboard() {
                   
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
                       <div className={`px-3 py-1.5 rounded-xl text-xs font-black border flex items-center gap-1.5 shadow-sm
-                          ${r.aiScore >= 80 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 
-                            r.aiScore >= 50 ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 
-                            'bg-rose-500/10 text-rose-400 border-rose-500/30'}`}
+                          ${r.aiScore >= 80 ? 'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30' : 
+                            r.aiScore >= 50 ? 'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/30' : 
+                            'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/30'}`}
                       >
                           <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                           {r.aiScore} pts
@@ -196,7 +198,7 @@ export default function Dashboard() {
                       {/* Status Badge */}
                       {r.status !== "pending" && (
                           <span className={`text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-md border
-                              ${r.status === 'shortlisted' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border-rose-500/30'}`}
+                              ${r.status === 'shortlisted' ? 'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30' : 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30'}`}
                           >
                               {r.status}
                           </span>
@@ -206,11 +208,11 @@ export default function Dashboard() {
 
               {/* Summary Body */}
               <div className="p-6 flex-1 relative bg-transparent">
-                 <h4 className="text-[11px] font-bold text-indigo-300 uppercase tracking-widest mb-3 flex items-center gap-2">
+                 <h4 className="text-[11px] font-bold text-indigo-600 dark:text-indigo-300 uppercase tracking-widest mb-3 flex items-center gap-2 transition-colors">
                      AI Summary
-                     <div className="h-px bg-white/10 flex-1"></div>
+                     <div className="h-px bg-gray-200 dark:bg-white/10 flex-1 transition-colors"></div>
                  </h4>
-                 <div className="text-sm text-gray-300 leading-relaxed font-medium" 
+                 <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium transition-colors" 
                       style={{
                           display: '-webkit-box',
                           WebkitLineClamp: 4,
@@ -224,18 +226,18 @@ export default function Dashboard() {
               </div>
 
               {/* Action Footer */}
-              <div className="p-4 bg-white/5 border-t border-white/10 flex gap-3 backdrop-blur-sm">
+              <div className="p-4 bg-gray-50/50 dark:bg-white/5 border-t border-gray-200 dark:border-white/10 flex gap-3 backdrop-blur-sm transition-colors">
                 <button
                     onClick={() => updateStatus(r._id, "shortlisted")}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 border
-                        ${r.status === 'shortlisted' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-white/5 text-gray-300 border-white/10 hover:border-emerald-500/50 hover:text-emerald-400 hover:bg-emerald-500/10'}`}
+                        ${r.status === 'shortlisted' ? 'bg-emerald-100 text-emerald-700 border-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.1)] dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/50 dark:shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:border-emerald-300 dark:hover:border-emerald-500/50 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10'}`}
                 >
                     Shortlist
                 </button>
                 <button
                     onClick={() => updateStatus(r._id, "rejected")}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 border
-                        ${r.status === 'rejected' ? 'bg-rose-500/20 text-rose-400 border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.2)]' : 'bg-white/5 text-gray-300 border-white/10 hover:border-rose-500/50 hover:text-rose-400 hover:bg-rose-500/10'}`}
+                        ${r.status === 'rejected' ? 'bg-rose-100 text-rose-700 border-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.1)] dark:bg-rose-500/20 dark:text-rose-400 dark:border-rose-500/50 dark:shadow-[0_0_15px_rgba(244,63,94,0.2)]' : 'bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:border-rose-300 dark:hover:border-rose-500/50 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10'}`}
                 >
                     Reject
                 </button>

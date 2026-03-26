@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/api";
+import ThemeToggle from "../components/ThemeToggle";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -31,38 +32,39 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900 via-gray-950 to-black relative overflow-hidden font-sans">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100 via-gray-50 to-white dark:from-indigo-900 dark:via-gray-950 dark:to-black relative overflow-hidden font-sans transition-colors duration-300">
+      <ThemeToggle className="absolute top-6 right-6 z-50" />
       {/* Decorative animated background elements */}
-      <div className="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-purple-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-pulse-slow"></div>
-      <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-indigo-600/20 rounded-full mix-blend-screen filter blur-[120px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute top-[20%] right-[15%] w-72 h-72 bg-pink-500/20 rounded-full mix-blend-screen filter blur-[80px] animate-float"></div>
+      <div className="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-purple-400/30 dark:bg-purple-600/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] animate-pulse-slow"></div>
+      <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-indigo-400/20 dark:bg-indigo-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-[20%] right-[15%] w-72 h-72 bg-pink-400/20 dark:bg-pink-500/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] animate-float"></div>
 
-      <div className="glass-card-dark w-full max-w-md p-10 rounded-3xl z-10 mx-4 animate-fade-in-up">
+      <div className="glass-card w-full max-w-md p-10 rounded-3xl z-10 mx-4 animate-fade-in-up">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 mb-6 shadow-lg shadow-indigo-500/30 relative group cursor-default">
             <span className="text-2xl font-black text-white font-display tracking-tighter absolute inset-0 flex items-center justify-center">AI</span>
             <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
-          <h2 className="text-4xl font-black text-white tracking-tight mb-3 font-display">HireSight<span className="text-indigo-400">.</span></h2>
-          <p className="text-gray-400 text-sm font-medium">
+          <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-3 font-display transition-colors">HireSight<span className="text-indigo-500 dark:text-indigo-400">.</span></h2>
+          <p className="text-gray-600 dark:text-gray-400 text-sm font-medium transition-colors">
             {isLogin ? "Sign in to your intelligent hiring workspace" : "Create an account to begin"}
           </p>
         </div>
 
         {/* Toggle Tabs */}
-        <div className="flex p-1 mb-8 bg-white/5 rounded-2xl backdrop-blur-md border border-white/10 relative">
-          <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-indigo-500/20 border border-indigo-500/30 rounded-xl transition-transform duration-300 ease-in-out ${isLogin ? 'translate-x-0' : 'translate-x-[calc(100%+8px)]'}`}></div>
+        <div className="flex p-1 mb-8 bg-gray-200/60 dark:bg-white/5 rounded-2xl backdrop-blur-md border border-gray-300 dark:border-white/10 relative transition-colors">
+          <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-indigo-500/10 dark:bg-indigo-500/20 border border-indigo-500/20 dark:border-indigo-500/30 rounded-xl transition-transform duration-300 ease-in-out ${isLogin ? 'translate-x-0' : 'translate-x-[calc(100%+8px)]'}`}></div>
           <button
             type="button"
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative z-10 ${isLogin ? 'text-white' : 'text-gray-400 hover:text-gray-200'}`}
+            className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative z-10 ${isLogin ? 'text-indigo-900 dark:text-white' : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'}`}
           >
             Log In
           </button>
           <button
             type="button"
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative z-10 ${!isLogin ? 'text-white' : 'text-gray-400 hover:text-gray-200'}`}
+            className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative z-10 ${!isLogin ? 'text-indigo-900 dark:text-white' : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'}`}
           >
             Sign Up
           </button>
@@ -72,7 +74,7 @@ export default function Login() {
           {/* Animated height container for Name field to smooth transitions */}
           <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isLogin ? 'max-h-0 opacity-0' : 'max-h-24 opacity-100'}`}>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 ml-1" htmlFor="name">Full Name</label>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1 transition-colors" htmlFor="name">Full Name</label>
               <input
                 id="name"
                 type="text"
@@ -86,7 +88,7 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 ml-1" htmlFor="email">Email Address</label>
+            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1 transition-colors" htmlFor="email">Email Address</label>
             <input
               id="email"
               type="email"
@@ -99,7 +101,7 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 ml-1" htmlFor="password">Password</label>
+            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1 transition-colors" htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
