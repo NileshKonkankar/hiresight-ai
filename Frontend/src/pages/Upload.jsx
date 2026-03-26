@@ -24,13 +24,23 @@ export default function Upload() {
     e.stopPropagation();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setFiles(Array.from(e.dataTransfer.files));
+      const allFiles = Array.from(e.dataTransfer.files);
+      const validFiles = allFiles.filter(f => f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf"));
+      if (validFiles.length !== allFiles.length) {
+        alert("Only PDF files are allowed.");
+      }
+      setFiles(validFiles);
     }
   };
 
   const handleFileSelect = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFiles(Array.from(e.target.files));
+      const allFiles = Array.from(e.target.files);
+      const validFiles = allFiles.filter(f => f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf"));
+      if (validFiles.length !== allFiles.length) {
+        alert("Only PDF files are allowed.");
+      }
+      setFiles(validFiles);
     }
   };
 
@@ -119,6 +129,7 @@ export default function Upload() {
                     name="file-upload" 
                     type="file" 
                     multiple 
+                    accept=".pdf,application/pdf"
                     className="sr-only" 
                     ref={fileInputRef}
                     onChange={handleFileSelect}
@@ -127,7 +138,7 @@ export default function Upload() {
               <p className="font-medium text-gray-400 mt-2">or drag and drop them here</p>
             </div>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest bg-black/30 inline-block px-3 py-1 rounded-md border border-white/5">
-              PDF, DOC, DOCX limits up to 10MB
+              PDF limits up to 5MB
             </p>
           </div>
         </div>
