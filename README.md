@@ -4,10 +4,75 @@ HireSight AI is an intelligent, modern applicant tracking and resume ranking pla
 
 ---
 
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+    subgraph Frontend [Frontend (React + Tailwind)]
+        UI[Recruiter Dashboard]
+        Upload[Upload Resumes]
+        Input[Enter Job Description]
+    end
+
+    subgraph Backend [Backend (Node.js + Express)]
+        API[API Gateway]
+        PDF[pdfjs-dist Text Extractor]
+        DB[(MongoDB)]
+    end
+
+    subgraph AI [External Services]
+        Gemini[Google Gemini API]
+    end
+
+    Upload --> API
+    API --> PDF
+    PDF --> DB : Save Extracted Text
+    Input --> API
+    API --> Gemini : Send JD + Resume Text
+    Gemini --> API : Return Score, Rationale & Highlights
+    API --> DB : Update Candidate Records
+    DB --> API : Fetch Ranked Results
+    API --> UI : Display Transparent Match Analysis
+```
+
+## ⚙️ User Workflow
+
+```mermaid
+sequenceDiagram
+    actor Recruiter
+    participant UI as Frontend App
+    participant API as Node API
+    participant AI as Gemini AI
+    participant DB as MongoDB
+
+    Recruiter->>UI: Upload Candidate Resumes (PDFs)
+    UI->>API: Send Files
+    API->>API: Extract text using pdfjs-dist
+    API->>DB: Save candidate raw text & details
+    
+    Recruiter->>UI: Input Job Description & click "Rank Candidates"
+    UI->>API: Request AI Analysis alongside JD
+    API->>DB: Fetch pending resumes
+    
+    loop For Each Resume
+        API->>AI: Send Prompt + JD + Resume Text
+        AI-->>API: Returns AI Score, Rationale & Highlights
+    end
+    
+    API->>DB: Update Candidates with AI Metrics
+    API-->>UI: Return Ranked List (Sorted by Score)
+    UI-->>Recruiter: Display Dashboard with transparent Match Analysis
+    
+    Recruiter->>UI: Click Action (Shortlist/Export)
+    UI->>API: Trigger update / export
+    API->>DB: Persist changes
+```
+
 ## ✨ Features
 
 - **Automated Resume Parsing**: Securely upload resumes (PDF) and let the application extract the core information reliably using `pdfjs-dist`.
 - **Semantic Ranking**: Paste your technical and non-technical Job Description. The integrated Google Gemini AI model creates a detailed summary and ranks applicants dynamically.
+- **Transparent Match Analysis**: The system provides a custom "Selection Rationale" and explicit "Match Highlights", showing recruiters exactly *why* a candidate was selected by mapping resume snippets directly to JD requirements.
 - **Premium User Experience**: Designed with modern web aesthetics in mind, featuring responsive light and dark mode toggles, styling with Tailwind CSS, glassmorphic cards, and smooth CSS micro-animations.
 - **Actionable Insights**: Export candidate reports directly to CSV, sort top applicants globally, and seamlessly update application statuses.
 - **Secure Handling**: JWT Bearer token authentication integrated at the Axios interceptor level, coupled with robust React Router route protection. 
