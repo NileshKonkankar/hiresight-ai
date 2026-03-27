@@ -18,9 +18,14 @@ Return ONLY valid JSON in this format:
   "experienceMatch": number (0-100),
   "educationMatch": number (0-100),
   "overallScore": number (0-100),
-  "strengths": [string],
-  "weaknesses": [string],
-  "summary": string (2 lines max)
+  "selectionRationale": "string (1-2 sentences explaining exactly WHY they are a fit/unfit based on the JD vs Resume overlap)",
+  "matchHighlights": [
+    {
+      "requirement": "string (A core requirement specifically from the JD)",
+      "candidateHighlight": "string (The specific snippet or evidence from the resume that proves this)"
+    }
+  ],
+  "summary": "string (2 lines max overall summary)"
 }
 
 Evaluation rules:
@@ -28,6 +33,7 @@ Evaluation rules:
 - Experience = years + relevance
 - Education = degree relevance
 - Overall score must be realistic
+- For matchHighlights, provide exactly the top 3 most important matching requirements. This is crucial to explain the rationale visually.
 
 JOB DESCRIPTION:
 ${jobDescription}

@@ -6,18 +6,20 @@ HireSight AI is an intelligent, modern applicant tracking and resume ranking pla
 
 ## ✨ Features
 
-- **Automated Resume Parsing**: Securely upload resumes (PDF, DOCX) and let the AI extract the core information.
-- **Semantic Ranking**: Paste your technical and non-technical Job Description. The integrated AI model creates a detailed summary and ranks applicants dynamically.
-- **Premium User Experience**: Designed with modern web aesthetics in mind, utilizing dark mode sleekness, glassmorphic glass-cards, and smooth CSS micro-animations.
+- **Automated Resume Parsing**: Securely upload resumes (PDF) and let the application extract the core information reliably using `pdfjs-dist`.
+- **Semantic Ranking**: Paste your technical and non-technical Job Description. The integrated Google Gemini AI model creates a detailed summary and ranks applicants dynamically.
+- **Premium User Experience**: Designed with modern web aesthetics in mind, featuring responsive light and dark mode toggles, styling with Tailwind CSS, glassmorphic cards, and smooth CSS micro-animations.
 - **Actionable Insights**: Export candidate reports directly to CSV, sort top applicants globally, and seamlessly update application statuses.
 - **Secure Handling**: JWT Bearer token authentication integrated at the Axios interceptor level, coupled with robust React Router route protection. 
+- **Cloud Deployment Ready**: Pre-configured for easy deployment. Frontend is optimized for Vercel, and backend is optimized for Render, handling dynamic environment-specific base URLs and robust file uploads.
 
 ## 🛠️ Technology Stack
 
 - **Frontend**: React.js, Vite, Tailwind CSS v3, React Router DOM, Axios
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB / Mongoose
-- **AI Integration**: OpenAI GPT-based NLP logic
+- **AI Integration**: Google Gemini API for advanced NLP logic
+- **File Parsing**: `pdfjs-dist` for robust PDF text extraction
 - **Authentication**: Custom JSON Web Tokens (JWT) & bcrypt
 
 ---
@@ -29,7 +31,7 @@ Getting the application running locally is extremely straightforward.
 ### 1. Prerequisites
 - Node.js (v16+)
 - MongoDB Atlas cluster or local MongoDB instance
-- OpenAI API Key
+- Google Gemini API Key
 
 ### 2. Environment Setup
 
@@ -39,7 +41,7 @@ Navigate to the `Backend` directory and duplicate `.env.example` into a new `.en
 cd Backend
 cp .env.example .env
 ```
-Fill out the variables in `.env` with your actual MongoDB URI, a secure JWT Secret, and your OpenAI API Key.
+Fill out the variables in `.env` with your actual MongoDB URI, a secure JWT Secret, and your Google Gemini API Key (e.g., `GEMINI_API_KEY`).
 
 **Frontend Configuration:**
 Navigate to the `Frontend` directory and ensure the `.env` file is pointing to your local (or production) backend API:
@@ -74,5 +76,6 @@ npm run dev
 ## 🔒 Security & Architecture Notes
 - **Interceptors**: The application uses Axios interceptors to persistently attach Bearer tokens. If a token expires (401 response), the system unconditionally clears local storage and cleanly kicks the user back to the login gateway.
 - **Protected Routes**: React Router handles protected routing globally. Unauthenticated users cannot peek at `/dashboard` or `/upload` paths.
+- **Deployment**: Architecture ensures seamless communication between frontend (Vercel) and backend (Render).
 
 *(This application was continuously refined with AI automation to be completely production-ready.)*

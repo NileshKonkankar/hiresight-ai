@@ -207,22 +207,49 @@ export default function Dashboard() {
               </div>
 
               {/* Summary Body */}
-              <div className="p-6 flex-1 relative bg-transparent">
-                 <h4 className="text-[11px] font-bold text-indigo-600 dark:text-indigo-300 uppercase tracking-widest mb-3 flex items-center gap-2 transition-colors">
-                     AI Summary
-                     <div className="h-px bg-gray-200 dark:bg-white/10 flex-1 transition-colors"></div>
-                 </h4>
-                 <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium transition-colors" 
-                      style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 4,
-                          WebkitBoxOrient: 'vertical',
-                          overflow: 'hidden'
-                      }}
-                      title={r.aiData?.summary}
-                  >
-                    {r.aiData?.summary || "No summary available."}
+              <div className="p-6 flex-1 relative bg-transparent flex flex-col gap-5">
+                 <div>
+                     <h4 className="text-[11px] font-bold text-indigo-600 dark:text-indigo-300 uppercase tracking-widest mb-2 flex items-center gap-2 transition-colors">
+                         Selection Rationale
+                         <div className="h-px bg-gray-200 dark:bg-white/10 flex-1 transition-colors"></div>
+                     </h4>
+                     <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium transition-colors" 
+                          style={{
+                              display: '-webkit-box',
+                              WebkitLineClamp: 3,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden'
+                          }}
+                          title={r.aiData?.selectionRationale || r.aiData?.summary}
+                      >
+                        {r.aiData?.selectionRationale || r.aiData?.summary || "No rationale available."}
+                     </div>
                  </div>
+
+                 {/* Match Highlights */}
+                 {r.aiData?.matchHighlights && r.aiData.matchHighlights.length > 0 && (
+                     <div>
+                         <h4 className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-2 flex items-center gap-2 transition-colors">
+                             Key Matches
+                             <div className="h-px bg-gray-200 dark:bg-white/10 flex-1 transition-colors"></div>
+                         </h4>
+                         <div className="space-y-2">
+                             {r.aiData.matchHighlights.slice(0, 3).map((match, idx) => (
+                                 <div key={idx} className="bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100 dark:border-emerald-500/10 rounded-[10px] p-3 text-xs transition-all hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-200">
+                                     <div className="font-bold text-gray-900 dark:text-white flex items-start gap-2 mb-1 transition-colors">
+                                        <div className="mt-0.5 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-full p-0.5 shadow-sm">
+                                            <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                        </div>
+                                        <span className="line-clamp-1 text-[11px] uppercase tracking-wide opacity-90" title={match.requirement}>{match.requirement}</span>
+                                     </div>
+                                     <div className="text-gray-600 dark:text-gray-400 pl-6 line-clamp-2 italic opacity-90 transition-colors" title={match.candidateHighlight}>
+                                        "{match.candidateHighlight}"
+                                     </div>
+                                 </div>
+                             ))}
+                         </div>
+                     </div>
+                 )}
               </div>
 
               {/* Action Footer */}
