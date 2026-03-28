@@ -97,6 +97,7 @@ sequenceDiagram
 - **Actionable Insights**: Export candidate reports directly to CSV, sort top applicants globally, and seamlessly update application statuses.
 - **Secure Handling**: JWT Bearer token authentication integrated at the Axios interceptor level, coupled with robust React Router route protection. 
 - **Cloud Deployment Ready**: Pre-configured for easy deployment. Frontend is optimized for Vercel, and backend is optimized for Render, handling dynamic environment-specific base URLs and robust file uploads.
+- **Docker & CI/CD Pipeline**: Fully containerized using continuous integration pipelines with GitHub Actions. It includes Nginx to securely serve local builds, multi-stage Vite optimisations, and a unified `docker-compose.yml` to spin up everything with a single command.
 
 ## 🛠️ Technology Stack
 
@@ -106,6 +107,7 @@ sequenceDiagram
 - **AI Integration**: Google Gemini API for advanced NLP logic
 - **File Parsing**: `pdfjs-dist` for robust PDF text extraction
 - **Authentication**: Custom JSON Web Tokens (JWT) & bcrypt
+- **DevOps & CI/CD**: Docker, Docker Compose, Nginx, GitHub Actions
 
 ---
 
@@ -155,6 +157,22 @@ npm install
 npm run dev
 ```
 *The Vite development server will open instantly on `http://localhost:5173`*
+
+---
+
+## 🐳 Docker Deployment
+
+You can quickly spin up both the Frontend and Backend services in isolated containers using Docker Compose.
+
+1. Ensure **Docker** and **Docker Compose** are installed and running on your system.
+2. Create your `.env` files in the `Backend` and `Frontend` directories as detailed in the Quickstart Guide.
+3. Run the following command from the root directory:
+
+```bash
+docker-compose up --build
+```
+
+The application will build the backend Node.js server (`http://localhost:5000`) and compile the Vite frontend serving it statically via Nginx (`http://localhost:80`). Continuous Integration checks are also automated via GitHub Actions on every push/PR to the `main` branch.
 
 ---
 
