@@ -1,6 +1,26 @@
 # HireSight AI 🚀
 
-HireSight AI is an intelligent, modern applicant tracking and resume ranking platform built to streamline the hiring process. By semantically analyzing candidate resumes against a provided Job Description (JD), HireSight AI assigns compatibility scores to each candidate, allowing recruiters to effortlessly shortlist or reject applicants.
+HireSight AI is an intelligent, modern applicant tracking and resume ranking platform built to streamline the hiring process.
+
+## ⚠️ The Problem
+
+The traditional hiring process is time-consuming and often biased. Recruiters receive hundreds of resumes for a single job posting, making it nearly impossible to manually review each one thoroughly. Key skills and qualified candidates often slip through the cracks, while a significant amount of time is wasted reading irrelevant applications. Furthermore, the lack of transparency in why a candidate is selected or rejected can lead to poor candidate experiences and biased hiring decisions.
+
+## 💡 The Solution
+
+HireSight AI automates the initial screening phase by semantically analyzing candidate resumes against a provided Job Description (JD). Utilizing advanced Large Language Models (LLMs), the platform assigns a compatibility score to each candidate based on their match to both technical and non-technical requirements.
+
+Beyond simply scoring, HireSight AI provides crystal-clear, AI-generated rationales and highlights precisely *why* a candidate was shortlisted or rejected. This allows recruiters to make faster, fairer, and data-backed decisions effortlessly.
+
+---
+
+## 📸 Screenshots
+
+![Screenshot 1](./screenshots/screenshot1.png)
+![Screenshot 2](./screenshots/screenshot2.png)
+![Screenshot 3](./screenshots/screenshot3.png)
+![Screenshot 4](./screenshots/screenshot4.png)
+![Screenshot 5](./screenshots/screenshot5.png)
 
 ---
 
