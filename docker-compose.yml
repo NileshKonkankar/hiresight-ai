@@ -12,7 +12,8 @@ services:
       - FRONTEND_URL=http://localhost
       # Add other essential backend environment variables here, e.g.:
       # - MONGODB_URI=your_mongodb_connection_string
-      # - GEMINI_API_KEY=your_gemini_api_key
+      - XAI_API_KEY=your_xai_api_key
+      - XAI_MODEL=grok-beta
 
   frontend:
     build:
