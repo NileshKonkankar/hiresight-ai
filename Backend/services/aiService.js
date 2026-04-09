@@ -3,10 +3,10 @@ const OpenAI = require("openai");
 
 const openai = new OpenAI({
   apiKey: process.env.XAI_API_KEY,
-  baseURL: "https://api.x.ai/v1",
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
-const modelName = process.env.XAI_MODEL || "openai/gpt-oss-120b";
+const modelName = process.env.XAI_MODEL || "llama-3.3-70b-versatile";
 
 async function analyzeResume(resumeText, jobDescription) {
   const prompt = `
