@@ -6,7 +6,7 @@ const openai = new OpenAI({
   baseURL: "https://api.x.ai/v1",
 });
 
-const modelName = process.env.XAI_MODEL || "grok-beta";
+const modelName = process.env.XAI_MODEL || "openai/gpt-oss-120b";
 
 async function analyzeResume(resumeText, jobDescription) {
   const prompt = `
