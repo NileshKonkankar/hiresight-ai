@@ -1,11 +1,14 @@
 require("dotenv").config();
+const OpenAI = require("openai");
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const openai = new OpenAI({
+  apiKey: process.env.XAI_API_KEY,
+  baseURL: "https://api.x.ai/v1",
+});
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const modelName = process.env.XAI_MODEL || "grok-beta";
 
 async function analyzeResume(resumeText, jobDescription) {
-
   const prompt = `
 You are an AI recruiter.
 
@@ -42,18 +45,19 @@ RESUME:
 ${resumeText}
 `;
 
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash-lite",
-    generationConfig: { temperature: 0.3 }
+  const response = await openai.chat.completions.create({
+    model: modelName,
+    messages: [
+      { role: "system", content: "You are a helpful assistant that returns only valid JSON." },
+      { role: "user", content: prompt },
+    ],
+    temperature: 0.3,
+    response_format: { type: "json_object" },
   });
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const content = response.choices[0].message.content;
 
-  // Strip markdown code fences if Gemini wraps the JSON
-  const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
-
-  return JSON.parse(cleaned);
+  return JSON.parse(content);
 }
 
 module.exports = analyzeResume;
