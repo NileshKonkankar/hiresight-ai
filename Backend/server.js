@@ -2,8 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
-const mongoSanitize = require("express-mongo-sanitize");
-const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
 
 const connectDB = require("./config/db");
@@ -11,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const resumeRoutes = require("./routes/resumeRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const exportRoutes = require("./routes/exportRoutes");
+const sanitizeRequest = require("./middleware/sanitizeMiddleware");
 
 dotenv.config();
 
@@ -40,11 +39,9 @@ app.use("/api", limiter);
 // Body parser, reading data from body into req.body, with a size limit
 app.use(express.json({ limit: "10kb" }));
 
-// Data sanitization against NoSQL query injection
-app.use(mongoSanitize());
-
-// Data sanitization against XSS
-app.use(xss());
+// Data sanitization against NoSQL query injection and XSS.
+// The third-party middleware assigns req.query, which is read-only in Express 5.
+app.use(sanitizeRequest);
 
 
 app.use("/api/auth", authRoutes);

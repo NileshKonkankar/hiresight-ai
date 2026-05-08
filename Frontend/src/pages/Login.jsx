@@ -25,7 +25,8 @@ export default function Login() {
         navigate("/dashboard");
       }
     } catch (error) {
-      alert(isLogin ? "Login failed" : "Registration failed");
+      const fallback = isLogin ? "Login failed" : "Registration failed";
+      alert(error.response?.data?.message || fallback);
     } finally {
       setLoading(false);
     }

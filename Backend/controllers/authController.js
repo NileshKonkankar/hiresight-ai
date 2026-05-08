@@ -2,46 +2,67 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const createToken = (userId) => {
+  if (!process.env.JWT_SECRET) {
+    const error = new Error("JWT_SECRET is not configured");
+    error.code = "AUTH_CONFIG_MISSING";
+    throw error;
+  }
+
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+};
+
+const isPresentString = (value) => typeof value === "string" && value.trim().length > 0;
+const normalizeEmail = (email) => email.trim().toLowerCase();
+
 exports.register = async (req, res) => {
-
   try {
-
     const { name, email, password } = req.body;
 
-    const userExists = await User.findOne({ email });
+    if (!isPresentString(name) || !isPresentString(email) || !isPresentString(password)) {
+      return res.status(400).json({ message: "Name, email, and password are required" });
+    }
+
+    const normalizedEmail = normalizeEmail(email);
+    const userExists = await User.findOne({ email: normalizedEmail });
 
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await User.create({
-      name,
-      email,
+      name: name.trim(),
+      email: normalizedEmail,
       password: hashedPassword
     });
 
-    const token = jwt.sign(
-  { id: user._id },
-  process.env.JWT_SECRET,
-  { expiresIn: "7d" }
-);
-
+    const token = createToken(user._id);
     res.json({ token });
-
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    if (error.code === "AUTH_CONFIG_MISSING") {
+      console.error("Register error:", error.message);
+      return res.status(500).json({ message: "Authentication is not configured on the server" });
+    }
+
+    console.error("Register error:", error);
+    res.status(500).json({ message: "Registration failed" });
   }
 };
 
 exports.login = async (req, res) => {
-
   try {
-
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    if (!isPresentString(email) || !isPresentString(password)) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    const user = await User.findOne({ email: normalizeEmail(email) });
 
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -53,17 +74,15 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
+    const token = createToken(user._id);
     res.json({ token });
-
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error.code === "AUTH_CONFIG_MISSING") {
+      console.error("Login error:", error.message);
+      return res.status(500).json({ message: "Authentication is not configured on the server" });
+    }
+
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Login failed" });
   }
-console.log("SECRET USED FOR SIGN:", process.env.JWT_SECRET);
-  console.log("TOKEN GENERATED:", token);
 };
