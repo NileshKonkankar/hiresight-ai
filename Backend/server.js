@@ -1,6 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+const rateLimit = require("express-rate-limit");
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
@@ -21,7 +25,27 @@ app.use(cors({
   ],
   credentials: true
 }));
-app.use(express.json());
+
+// Set security HTTP headers
+app.use(helmet());
+
+// Rate limiting for API routes
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again after 15 minutes"
+});
+app.use("/api", limiter);
+
+// Body parser, reading data from body into req.body, with a size limit
+app.use(express.json({ limit: "10kb" }));
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
