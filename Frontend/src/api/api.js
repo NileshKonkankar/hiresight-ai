@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const configuredApiUrl = import.meta.env.VITE_API_URL || "https://hiresight-ai.onrender.com/api";
+const normalizedApiUrl = configuredApiUrl.replace(/\/$/, "");
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "https://hiresight-ai.onrender.com/api"
+  baseURL: normalizedApiUrl.endsWith("/api") ? normalizedApiUrl : `${normalizedApiUrl}/api`
 });
 
 // Add a request interceptor to attach the auth token automatically
