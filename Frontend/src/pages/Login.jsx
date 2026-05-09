@@ -15,15 +15,11 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      if (isLogin) {
-        const res = await api.post("/auth/login", { email, password });
-        sessionStorage.setItem("token", res.data.token);
-        navigate("/dashboard");
-      } else {
-        const res = await api.post("/auth/register", { name, email, password });
-        sessionStorage.setItem("token", res.data.token);
-        navigate("/dashboard");
-      }
+      const endpoint = isLogin ? "/auth/login" : "/auth/register";
+      const payload = isLogin ? { email, password } : { name, email, password };
+      const res = await api.post(endpoint, payload);
+      sessionStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
     } catch (error) {
       const fallback = isLogin ? "Login failed" : "Registration failed";
       alert(error.response?.data?.message || fallback);
@@ -33,102 +29,120 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100 via-gray-50 to-white dark:from-indigo-900 dark:via-gray-950 dark:to-black relative overflow-hidden font-sans transition-colors duration-300">
-      <ThemeToggle className="absolute top-6 right-6 z-50" />
-      {/* Decorative animated background elements */}
-      <div className="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-purple-400/30 dark:bg-purple-600/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] animate-pulse-slow"></div>
-      <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-indigo-400/20 dark:bg-indigo-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute top-[20%] right-[15%] w-72 h-72 bg-pink-400/20 dark:bg-pink-500/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] animate-float"></div>
+    <div className="page-shell flex items-center justify-center px-4 py-10">
+      <ThemeToggle className="absolute right-6 top-6" />
 
-      <div className="glass-card w-full max-w-md p-10 rounded-3xl z-10 mx-4 animate-fade-in-up">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 mb-6 shadow-lg shadow-indigo-500/30 relative group cursor-default">
-            <span className="text-2xl font-black text-white font-display tracking-tighter absolute inset-0 flex items-center justify-center">AI</span>
-            <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <main className="grid w-full max-w-5xl overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 md:grid-cols-[1fr_420px]">
+        <section className="hidden border-r border-slate-200 bg-slate-100 p-10 dark:border-slate-800 dark:bg-slate-950 md:flex md:flex-col md:justify-between">
+          <div>
+            <div className="mb-8 inline-flex h-10 w-10 items-center justify-center rounded-md bg-slate-950 text-sm font-bold text-white dark:bg-white dark:text-slate-950">
+              HS
+            </div>
+            <h1 className="max-w-md text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
+              HireSight AI
+            </h1>
+            <p className="mt-4 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
+              Structured candidate review for teams that need faster screening, defensible AI assistance, and auditable hiring workflows.
+            </p>
           </div>
-          <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-3 font-display transition-colors">HireSight<span className="text-indigo-500 dark:text-indigo-400">.</span></h2>
-          <p className="text-gray-600 dark:text-gray-400 text-sm font-medium transition-colors">
-            {isLogin ? "Sign in to your intelligent hiring workspace" : "Create an account to begin"}
-          </p>
-        </div>
 
-        {/* Toggle Tabs */}
-        <div className="flex p-1 mb-8 bg-gray-200/60 dark:bg-white/5 rounded-2xl backdrop-blur-md border border-gray-300 dark:border-white/10 relative transition-colors">
-          <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-indigo-500/10 dark:bg-indigo-500/20 border border-indigo-500/20 dark:border-indigo-500/30 rounded-xl transition-transform duration-300 ease-in-out ${isLogin ? 'translate-x-0' : 'translate-x-[calc(100%+8px)]'}`}></div>
-          <button
-            type="button"
-            onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative z-10 ${isLogin ? 'text-indigo-900 dark:text-white' : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'}`}
-          >
-            Log In
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative z-10 ${!isLogin ? 'text-indigo-900 dark:text-white' : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'}`}
-          >
-            Sign Up
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Animated height container for Name field to smooth transitions */}
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isLogin ? 'max-h-0 opacity-0' : 'max-h-24 opacity-100'}`}>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1 transition-colors" htmlFor="name">Full Name</label>
-              <input
-                id="name"
-                type="text"
-                placeholder="John Doe"
-                className="w-full px-4 py-3.5 rounded-xl glass-input"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
-                required={!isLogin}
-              />
+          <div className="grid gap-3 text-sm text-slate-600 dark:text-slate-400">
+            <div className="rounded-md border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+              Job-scoped candidate pools
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+              Evidence-based AI scoring
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+              Recruiter action audit trail
             </div>
           </div>
+        </section>
 
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1 transition-colors" htmlFor="email">Email Address</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="admin@hiresight.ai"
-              className="w-full px-4 py-3.5 rounded-xl glass-input"
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              required
-            />
+        <section className="p-6 sm:p-8">
+          <div className="mb-8">
+            <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md bg-slate-950 text-sm font-bold text-white dark:bg-white dark:text-slate-950 md:hidden">
+              HS
+            </div>
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
+              {isLogin ? "Sign in" : "Create account"}
+            </h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              {isLogin ? "Access your hiring workspace." : "Start a hiring workspace for your team."}
+            </p>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1 transition-colors" htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              className="w-full px-4 py-3.5 rounded-xl glass-input"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
-            />
+          <div className="mb-6 grid grid-cols-2 rounded-md border border-slate-200 bg-slate-100 p-1 dark:border-slate-800 dark:bg-slate-950">
+            <button
+              type="button"
+              onClick={() => setIsLogin(true)}
+              className={`rounded px-3 py-2 text-sm font-semibold transition ${isLogin ? "bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}
+            >
+              Log In
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsLogin(false)}
+              className={`rounded px-3 py-2 text-sm font-semibold transition ${!isLogin ? "bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}
+            >
+              Sign Up
+            </button>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3.5 px-4 flex justify-center items-center rounded-xl text-white font-semibold text-base transition-all duration-300 mt-6 border border-indigo-500/50 relative overflow-hidden group ${loading ? 'opacity-70 cursor-not-allowed bg-indigo-600/50' : 'bg-indigo-600/80 hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] hover:-translate-y-0.5'}`}
-          >
-            {!loading && <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>}
-            {loading ? (
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            ) : (isLogin ? "Sign In →" : "Create Account →")}
-          </button>
-        </form>
-      </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" htmlFor="name">
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="John Doe"
+                  className="glass-input w-full rounded-md px-3 py-2.5 text-sm"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  required={!isLogin}
+                />
+              </div>
+            )}
+
+            <div>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" htmlFor="email">
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="admin@hiresight.ai"
+                className="glass-input w-full rounded-md px-3 py-2.5 text-sm"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" htmlFor="password">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Enter password"
+                className="glass-input w-full rounded-md px-3 py-2.5 text-sm"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                required
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="primary-button w-full">
+              {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
+            </button>
+          </form>
+        </section>
+      </main>
     </div>
   );
 }

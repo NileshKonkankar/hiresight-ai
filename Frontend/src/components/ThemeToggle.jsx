@@ -6,12 +6,9 @@ export default function ThemeToggle({ className = "" }) {
   return (
     <button
       onClick={toggleTheme}
-      className={`p-2 rounded-xl transition-all duration-300 flex items-center justify-center ${className} ${
-        isDarkMode 
-          ? "bg-white/10 hover:bg-white/20 text-indigo-300 hover:text-indigo-200 border border-white/10 hover:border-indigo-500/30 shadow-sm" 
-          : "bg-gray-100/80 backdrop-blur-md hover:bg-gray-200/80 text-indigo-600 hover:text-indigo-700 border border-gray-200 shadow-sm"
-      }`}
+      className={`rounded-md border border-slate-300 bg-white p-2 text-slate-600 shadow-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 ${className}`}
       title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+      aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDarkMode ? (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

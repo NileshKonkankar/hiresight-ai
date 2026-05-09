@@ -24,6 +24,7 @@ export default function Dashboard() {
   const total = results.length;
   const shortlisted = results.filter((r) => r.status === "shortlisted").length;
   const rejected = results.filter((r) => r.status === "rejected").length;
+  const pending = total - shortlisted - rejected;
 
   useEffect(() => {
     const loadInitialJobs = async () => {
@@ -172,25 +173,22 @@ export default function Dashboard() {
   const uploadPath = selectedJobId ? `/upload?jobId=${selectedJobId}` : "/upload";
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-gray-200 pb-12 transition-colors duration-300">
-      <header className="bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 sticky top-0 z-20 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div className="page-shell">
+      <header className="app-header">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-              <span className="text-white font-black text-sm font-display tracking-tighter">AI</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-slate-950 text-xs font-bold text-white dark:bg-white dark:text-slate-950">
+              HS
             </div>
-            <h1 className="text-xl font-black tracking-tight text-gray-900 dark:text-white font-display transition-colors">HireSight<span className="text-indigo-500 dark:text-indigo-400">.</span></h1>
+            <div>
+              <h1 className="text-base font-semibold leading-5">HireSight AI</h1>
+              <p className="hidden text-xs text-slate-500 dark:text-slate-400 sm:block">Recruiting operations console</p>
+            </div>
           </div>
-          <div className="flex gap-3 items-center">
-            {total > 0 && (
-              <div className="hidden lg:flex gap-4 text-sm font-semibold mr-2 bg-gray-100 dark:bg-white/5 px-5 py-2 rounded-full border border-gray-200 dark:border-white/10 transition-colors">
-                <span>Total: <span className="font-bold">{total}</span></span>
-                <span className="text-emerald-600 dark:text-emerald-400">Shortlisted: {shortlisted}</span>
-                <span className="text-rose-600 dark:text-rose-400">Rejected: {rejected}</span>
-              </div>
-            )}
+
+          <div className="flex items-center gap-2">
             <ThemeToggle />
-            <button onClick={() => navigate(uploadPath)} className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-500/10 hover:bg-indigo-200 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/20 px-4 py-2 rounded-xl transition-all">
+            <button onClick={() => navigate(uploadPath)} className="secondary-button hidden sm:inline-flex">
               Upload
             </button>
             <button
@@ -198,7 +196,7 @@ export default function Dashboard() {
                 sessionStorage.removeItem("token");
                 navigate("/");
               }}
-              className="text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 px-4 py-2 rounded-xl transition-all"
+              className="secondary-button"
             >
               Logout
             </button>
@@ -206,173 +204,232 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">Candidate Review</h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Manage requisitions, run AI-assisted screening, and track recruiter decisions.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-4 gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            {[
+              ["Total", total],
+              ["Pending", pending],
+              ["Shortlist", shortlisted],
+              ["Reject", rejected]
+            ].map(([label, value]) => (
+              <div key={label} className="min-w-20 rounded-md bg-slate-50 px-3 py-2 text-center dark:bg-slate-950">
+                <div className="text-lg font-semibold text-slate-950 dark:text-white">{value}</div>
+                <div className="text-[11px] font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {notice && (
-          <div role="status" className="mb-6 rounded-xl border border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10 px-4 py-3 text-sm font-semibold text-indigo-800 dark:text-indigo-200">
+          <div role="status" className="mb-5 rounded-md border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
             {notice}
           </div>
         )}
 
-        <section className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 mb-8">
-          <aside className="glass-card rounded-2xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-black uppercase tracking-wider text-gray-700 dark:text-gray-200">Jobs</h2>
-              <button onClick={startNewJob} className="text-xs font-bold text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-white">
+        <section className="grid grid-cols-1 gap-5 lg:grid-cols-[300px_1fr]">
+          <aside className="glass-card rounded-lg p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Requisitions</h3>
+              <button onClick={startNewJob} className="secondary-button px-3 py-1.5 text-xs">
                 New
               </button>
             </div>
 
-            <div className="space-y-2 max-h-[420px] overflow-y-auto">
+            <div className="space-y-2">
               {jobs.length === 0 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">Create your first requisition to start a scoped candidate review.</p>
+                <p className="rounded-md bg-slate-50 p-3 text-sm text-slate-500 dark:bg-slate-950 dark:text-slate-400">
+                  Create a requisition to begin candidate review.
+                </p>
               )}
+
               {jobs.map((job) => (
                 <button
                   key={job._id}
                   type="button"
                   onClick={() => selectJob(job)}
-                  className={`w-full text-left rounded-xl border px-4 py-3 transition-all ${selectedJobId === job._id ? "border-indigo-400 bg-indigo-50 dark:bg-indigo-500/10" : "border-gray-200 dark:border-white/10 hover:border-indigo-300 dark:hover:border-indigo-500/40"}`}
+                  className={`w-full rounded-md border px-3 py-3 text-left transition ${selectedJobId === job._id ? "border-slate-950 bg-slate-100 dark:border-slate-300 dark:bg-slate-800" : "border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"}`}
                 >
-                  <span className="block text-sm font-bold text-gray-900 dark:text-white truncate">{job.title}</span>
-                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">{job.status}</span>
+                  <span className="block truncate text-sm font-semibold text-slate-950 dark:text-white">{job.title}</span>
+                  <span className="mt-1 block text-xs capitalize text-slate-500 dark:text-slate-400">{job.status}</span>
                 </button>
               ))}
             </div>
           </aside>
 
-          <section className="glass-card rounded-2xl p-6">
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-5">
-              <div>
-                <h2 className="text-2xl font-bold font-display text-gray-900 dark:text-white">Target Profile Criteria</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Save the job, upload resumes to it, then run an auditable AI review.</p>
-              </div>
-              {selectedJob && (
-                <span className="inline-flex w-fit rounded-full border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-                  Scoped to {selectedJob.title}
-                </span>
-              )}
-            </div>
-
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2" htmlFor="job-title">Job Title</label>
-            <input
-              id="job-title"
-              className="w-full px-4 py-3 rounded-xl glass-input mb-4"
-              placeholder="Senior Backend Engineer"
-              value={jobDraft.title}
-              onChange={(e) => setJobDraft({ ...jobDraft, title: e.target.value })}
-            />
-
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2" htmlFor="job-description">Job Description</label>
-            <textarea
-              id="job-description"
-              className="w-full p-5 rounded-2xl glass-input min-h-[180px]"
-              placeholder="Paste job responsibilities, must-have requirements, nice-to-have skills, location constraints, and seniority expectations..."
-              value={jobDraft.description}
-              onChange={(e) => setJobDraft({ ...jobDraft, description: e.target.value })}
-            />
-
-            <div className="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div className="flex flex-wrap gap-3">
-                <button
-                  onClick={saveJob}
-                  disabled={savingJob}
-                  className="px-5 py-3 rounded-xl font-bold border border-gray-300 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/10 transition-all"
-                >
-                  {savingJob ? "Saving..." : selectedJobId ? "Save Job" : "Create Job"}
-                </button>
-                <button
-                  onClick={handleRank}
-                  disabled={loading || !jobDraft.title.trim() || !jobDraft.description.trim()}
-                  className={`px-6 py-3 rounded-xl font-bold text-white shadow-lg transition-all border border-indigo-500/50 ${loading || !jobDraft.title.trim() || !jobDraft.description.trim() ? "opacity-50 cursor-not-allowed bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700"}`}
-                >
-                  {loading ? "Analyzing..." : "Rank Candidates"}
-                </button>
+          <div className="space-y-5">
+            <section className="glass-card rounded-lg p-5">
+              <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-950 dark:text-white">Role Criteria</h3>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    Define the job once, then upload and rank candidates within this scope.
+                  </p>
+                </div>
+                {selectedJob && (
+                  <span className="w-fit rounded-md border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+                    Scoped: {selectedJob.title}
+                  </span>
+                )}
               </div>
 
-              {total > 0 && (
-                <div className="flex gap-3 w-full sm:w-auto">
-                  <select onChange={handleSort} className="flex-1 sm:flex-none glass-input rounded-xl px-4 py-3 text-sm font-semibold cursor-pointer">
-                    <option value="high">Score: High to Low</option>
-                    <option value="low">Score: Low to High</option>
-                  </select>
-                  <button onClick={downloadCSV} className="bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/20 border border-gray-300 dark:border-white/10 px-5 py-3 rounded-xl text-sm font-semibold transition-all">
-                    Export
+              <div className="grid gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" htmlFor="job-title">
+                    Job Title
+                  </label>
+                  <input
+                    id="job-title"
+                    className="glass-input w-full rounded-md px-3 py-2.5 text-sm"
+                    placeholder="Senior Backend Engineer"
+                    value={jobDraft.title}
+                    onChange={(e) => setJobDraft({ ...jobDraft, title: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" htmlFor="job-description">
+                    Job Description
+                  </label>
+                  <textarea
+                    id="job-description"
+                    className="glass-input min-h-36 w-full rounded-md px-3 py-2.5 text-sm leading-6"
+                    placeholder="Paste job responsibilities, must-have requirements, nice-to-have skills, location constraints, and seniority expectations..."
+                    value={jobDraft.description}
+                    onChange={(e) => setJobDraft({ ...jobDraft, description: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap gap-2">
+                  <button onClick={saveJob} disabled={savingJob} className="secondary-button">
+                    {savingJob ? "Saving..." : selectedJobId ? "Save Role" : "Create Role"}
+                  </button>
+                  <button
+                    onClick={handleRank}
+                    disabled={loading || !jobDraft.title.trim() || !jobDraft.description.trim()}
+                    className="primary-button"
+                  >
+                    {loading ? "Analyzing..." : "Rank Candidates"}
+                  </button>
+                  <button onClick={() => navigate(uploadPath)} className="secondary-button sm:hidden">
+                    Upload
                   </button>
                 </div>
-              )}
-            </div>
-          </section>
-        </section>
 
-        {!loading && results.length === 0 && (
-          <div className="text-center py-16 px-4 rounded-2xl glass-card">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white font-display">No Candidates In This Job Yet</h3>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto font-medium">Create or select a job, upload resumes to that job, then run the ranking workflow.</p>
-            <button onClick={() => navigate(uploadPath)} className="mt-6 text-sm font-bold text-indigo-600 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 px-6 py-2.5 rounded-full transition-colors">
-              Upload Resumes
-            </button>
-          </div>
-        )}
+                {total > 0 && (
+                  <div className="flex gap-2">
+                    <select onChange={handleSort} className="glass-input rounded-md px-3 py-2.5 text-sm font-medium">
+                      <option value="high">Score: High to Low</option>
+                      <option value="low">Score: Low to High</option>
+                    </select>
+                    <button onClick={downloadCSV} className="secondary-button">
+                      Export
+                    </button>
+                  </div>
+                )}
+              </div>
+            </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {results.map((r) => (
-            <article key={r._id} className="glass-card rounded-2xl overflow-hidden flex flex-col">
-              <div className="px-5 py-4 border-b border-gray-200 dark:border-white/10 flex justify-between items-start bg-gray-50/70 dark:bg-white/5">
-                <div className="min-w-0 pr-4">
-                  <h3 className="font-bold text-gray-900 dark:text-white truncate" title={r.fileName}>{r.fileName || "Unknown File"}</h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">AI decision support</p>
-                </div>
-                <div className="flex flex-col items-end gap-2">
-                  <span className={`px-3 py-1 rounded-xl text-xs font-black border ${r.aiScore >= 80 ? "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/30" : r.aiScore >= 50 ? "bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30" : "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/10 dark:text-rose-300 dark:border-rose-500/30"}`}>
-                    {r.aiScore ?? "--"} pts
-                  </span>
-                  <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400">Conf: {r.aiData?.confidence ?? "--"}</span>
-                </div>
+            <section className="glass-card rounded-lg">
+              <div className="border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+                <h3 className="text-lg font-semibold text-slate-950 dark:text-white">Candidate Results</h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  Scores are AI-assisted recommendations and should be reviewed by a recruiter.
+                </p>
               </div>
 
-              <div className="p-5 flex-1 space-y-5">
-                <section>
-                  <h4 className="text-[11px] font-bold text-indigo-600 dark:text-indigo-300 uppercase tracking-widest mb-2">Rationale</h4>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{r.aiData?.selectionRationale || r.aiData?.summary || "No rationale available."}</p>
-                </section>
-
-                {r.aiData?.matchHighlights?.length > 0 && (
-                  <section>
-                    <h4 className="text-[11px] font-bold text-emerald-600 dark:text-emerald-300 uppercase tracking-widest mb-2">Evidence</h4>
-                    <div className="space-y-2">
-                      {r.aiData.matchHighlights.slice(0, 3).map((match, idx) => (
-                        <div key={idx} className="rounded-xl border border-emerald-100 dark:border-emerald-500/20 bg-emerald-50/60 dark:bg-emerald-500/5 p-3 text-xs">
-                          <div className="font-bold text-gray-900 dark:text-white">{match.requirement}</div>
-                          <div className="text-gray-600 dark:text-gray-400 mt-1 italic">"{match.candidateHighlight}"</div>
+              {results.length === 0 && !loading ? (
+                <div className="px-5 py-12 text-center">
+                  <h4 className="text-base font-semibold text-slate-950 dark:text-white">No candidates available</h4>
+                  <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">
+                    Select or create a requisition, upload resumes, and run ranking to populate this review queue.
+                  </p>
+                  <button onClick={() => navigate(uploadPath)} className="secondary-button mt-5">
+                    Upload Resumes
+                  </button>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-200 dark:divide-slate-800">
+                  {results.map((r) => (
+                    <article key={r._id} className="p-5">
+                      <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h4 className="truncate text-base font-semibold text-slate-950 dark:text-white" title={r.fileName}>
+                              {r.fileName || "Unknown File"}
+                            </h4>
+                            <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold capitalize text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                              {r.status}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                            {r.aiData?.selectionRationale || r.aiData?.summary || "No rationale available."}
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
 
-                {r.aiData?.missingRequirements?.length > 0 && (
-                  <section>
-                    <h4 className="text-[11px] font-bold text-amber-600 dark:text-amber-300 uppercase tracking-widest mb-2">Missing Evidence</h4>
-                    <ul className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
-                      {r.aiData.missingRequirements.slice(0, 4).map((item, idx) => (
-                        <li key={idx}>- {item}</li>
-                      ))}
-                    </ul>
-                  </section>
-                )}
-              </div>
+                        <div className="grid grid-cols-2 gap-2 sm:w-56">
+                          <div className="rounded-md border border-slate-200 p-3 text-center dark:border-slate-800">
+                            <div className="text-xl font-semibold text-slate-950 dark:text-white">{r.aiScore ?? "--"}</div>
+                            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Score</div>
+                          </div>
+                          <div className="rounded-md border border-slate-200 p-3 text-center dark:border-slate-800">
+                            <div className="text-xl font-semibold text-slate-950 dark:text-white">{r.aiData?.confidence ?? "--"}</div>
+                            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Confidence</div>
+                          </div>
+                        </div>
+                      </div>
 
-              <div className="p-4 bg-gray-50/70 dark:bg-white/5 border-t border-gray-200 dark:border-white/10 flex gap-3">
-                <button onClick={() => updateStatus(r._id, "shortlisted")} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all ${r.status === "shortlisted" ? "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/50" : "bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:border-emerald-300"}`}>
-                  Shortlist
-                </button>
-                <button onClick={() => updateStatus(r._id, "rejected")} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all ${r.status === "rejected" ? "bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/50" : "bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:border-rose-300"}`}>
-                  Reject
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
+                      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                        {r.aiData?.matchHighlights?.length > 0 && (
+                          <div className="rounded-md border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+                            <h5 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Evidence</h5>
+                            <div className="mt-3 space-y-3">
+                              {r.aiData.matchHighlights.slice(0, 3).map((match, idx) => (
+                                <div key={idx} className="text-sm">
+                                  <div className="font-semibold text-slate-800 dark:text-slate-200">{match.requirement}</div>
+                                  <div className="mt-1 text-slate-500 dark:text-slate-400">"{match.candidateHighlight}"</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {r.aiData?.missingRequirements?.length > 0 && (
+                          <div className="rounded-md border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/60 dark:bg-amber-950/20">
+                            <h5 className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">Missing Evidence</h5>
+                            <ul className="mt-3 space-y-1 text-sm text-amber-900 dark:text-amber-100">
+                              {r.aiData.missingRequirements.slice(0, 4).map((item, idx) => (
+                                <li key={idx}>- {item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <button onClick={() => updateStatus(r._id, "shortlisted")} className="secondary-button">
+                          Shortlist
+                        </button>
+                        <button onClick={() => updateStatus(r._id, "rejected")} className="danger-button">
+                          Reject
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          </div>
+        </section>
       </main>
     </div>
   );
