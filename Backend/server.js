@@ -16,6 +16,16 @@ dotenv.config({ quiet: true });
 
 const app = express();
 
+// Render, Vercel, and most hosted platforms sit behind a reverse proxy.
+// express-rate-limit needs this to read the real client IP from X-Forwarded-For.
+const trustProxy = process.env.TRUST_PROXY || "1";
+const trustProxyValue = trustProxy === "true"
+  ? true
+  : trustProxy === "false"
+    ? false
+    : Number(trustProxy);
+app.set("trust proxy", trustProxyValue);
+
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || "http://localhost:5173",

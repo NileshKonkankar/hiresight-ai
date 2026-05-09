@@ -9,6 +9,7 @@ services:
       - "5000:5000"
     environment:
       - PORT=5000
+      - TRUST_PROXY=1
       - FRONTEND_URL=http://localhost
       # Add other essential backend environment variables here, e.g.:
       # - MONGO_URI=your_mongodb_connection_string
