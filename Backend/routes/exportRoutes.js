@@ -1,8 +1,9 @@
 const express = require("express");
-const router = express.Router();
-
+const auth = require("../middleware/authMiddleware");
 const { exportCSV } = require("../controllers/exportController");
 
-router.get("/csv", exportCSV);
+const router = express.Router();
+
+router.get("/csv", auth, exportCSV);
 
 module.exports = router;

@@ -1,14 +1,39 @@
-import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../api/api";
 import ThemeToggle from "../components/ThemeToggle";
 
 export default function Upload() {
   const [files, setFiles] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [selectedJobId, setSelectedJobId] = useState("");
+  const [notice, setNotice] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        const res = await api.get("/jobs");
+        const loadedJobs = res.data;
+        setJobs(loadedJobs);
+
+        const requestedJobId = searchParams.get("jobId");
+        const selectedJob = loadedJobs.find((job) => job._id === requestedJobId) || loadedJobs[0];
+
+        if (selectedJob) {
+          setSelectedJobId(selectedJob._id);
+        }
+      } catch {
+        setNotice("Could not load jobs. Create a job on the dashboard first.");
+      }
+    };
+
+    loadJobs();
+  }, [searchParams]);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -47,20 +72,25 @@ export default function Upload() {
 
   const handleUpload = async () => {
     if (files.length === 0) return;
+    if (!selectedJobId) {
+      setNotice("Select a job before uploading resumes.");
+      return;
+    }
     setLoading(true);
+    setNotice("");
 
     const formData = new FormData();
+    formData.append("jobId", selectedJobId);
     for (let i = 0; i < files.length; i++) {
         formData.append("resumes", files[i]);
     }
 
     try {
         await api.post("/resume/upload", formData);
-        alert("Resumes Uploaded Successfully!");
         setFiles([]);
-        navigate("/dashboard");
+        navigate(`/dashboard?jobId=${selectedJobId}`);
     } catch (error) {
-        alert("Upload failed.");
+        setNotice(error.response?.data?.message || "Upload failed.");
     } finally {
         setLoading(false);
     }
@@ -78,6 +108,11 @@ export default function Upload() {
       <div className="absolute bottom-[20%] right-[-5%] w-[500px] h-[500px] bg-indigo-400/10 dark:bg-indigo-600/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-pulse-slow pointer-events-none" style={{ animationDelay: '2s' }}></div>
       
       <div className="w-full max-w-3xl glass-card rounded-[2rem] p-10 shadow-2xl animate-fade-in-up">
+        {notice && (
+            <div role="status" className="mb-6 rounded-xl border border-indigo-200 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10 px-4 py-3 text-sm font-semibold text-indigo-800 dark:text-indigo-200">
+                {notice}
+            </div>
+        )}
         
         {/* Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-4">
@@ -91,12 +126,36 @@ export default function Upload() {
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400 max-w-md transition-colors">Drag and drop candidate resumes here to securely process and match them against your job descriptions using our AI.</p>
             </div>
             <button 
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(selectedJobId ? `/dashboard?jobId=${selectedJobId}` : "/dashboard")}
                 className="px-5 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-500/10 hover:bg-indigo-200 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/20 rounded-xl transition-all duration-300 shadow-sm flex items-center gap-2 group hover:text-indigo-800 dark:hover:text-white"
             >
                 <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 Dashboard
             </button>
+        </div>
+
+        <div className="mb-8">
+            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1 transition-colors" htmlFor="job-select">Upload To Job</label>
+            <div className="flex flex-col sm:flex-row gap-3">
+                <select
+                    id="job-select"
+                    value={selectedJobId}
+                    onChange={(e) => setSelectedJobId(e.target.value)}
+                    className="flex-1 glass-input rounded-xl px-4 py-3 text-sm font-semibold"
+                >
+                    <option value="">Select a job</option>
+                    {jobs.map((job) => (
+                        <option key={job._id} value={job._id}>{job.title}</option>
+                    ))}
+                </select>
+                <button
+                    type="button"
+                    onClick={() => navigate("/dashboard")}
+                    className="px-5 py-3 text-sm font-bold text-indigo-600 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-500/10 hover:bg-indigo-200 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/20 rounded-xl transition-all"
+                >
+                    Create Job
+                </button>
+            </div>
         </div>
 
         {/* Upload Area */}
@@ -181,9 +240,9 @@ export default function Upload() {
                 <div className="mt-8 flex justify-end">
                     <button
                         onClick={handleUpload}
-                        disabled={loading}
+                        disabled={loading || !selectedJobId}
                         className={`inline-flex items-center px-8 py-3.5 border border-indigo-500/50 text-base font-bold rounded-xl shadow-lg text-white transition-all duration-300 relative overflow-hidden group
-                            ${loading ? 'bg-indigo-400 dark:bg-indigo-900/50 cursor-not-allowed shadow-none opacity-50' : 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600/80 dark:hover:bg-indigo-500 hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] hover:-translate-y-0.5'}`}
+                            ${loading || !selectedJobId ? 'bg-indigo-400 dark:bg-indigo-900/50 cursor-not-allowed shadow-none opacity-50' : 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600/80 dark:hover:bg-indigo-500 hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] hover:-translate-y-0.5'}`}
                     >
                         {!loading && <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>}
                         {loading ? (

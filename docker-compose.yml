@@ -11,9 +11,10 @@ services:
       - PORT=5000
       - FRONTEND_URL=http://localhost
       # Add other essential backend environment variables here, e.g.:
-      # - MONGODB_URI=your_mongodb_connection_string
+      # - MONGO_URI=your_mongodb_connection_string
+      - JWT_SECRET=replace_with_a_secure_secret
       - XAI_API_KEY=your_xai_api_key
-      - XAI_MODEL=grok-beta
+      - XAI_MODEL=llama-3.3-70b-versatile
 
   frontend:
     build:

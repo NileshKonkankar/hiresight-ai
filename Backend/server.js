@@ -6,14 +6,13 @@ const rateLimit = require("express-rate-limit");
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const jobRoutes = require("./routes/jobRoutes");
 const resumeRoutes = require("./routes/resumeRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const exportRoutes = require("./routes/exportRoutes");
 const sanitizeRequest = require("./middleware/sanitizeMiddleware");
 
-dotenv.config();
-
-connectDB();
+dotenv.config({ quiet: true });
 
 const app = express();
 
@@ -37,7 +36,7 @@ const limiter = rateLimit({
 app.use("/api", limiter);
 
 // Body parser, reading data from body into req.body, with a size limit
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "64kb" }));
 
 // Data sanitization against NoSQL query injection and XSS.
 // The third-party middleware assigns req.query, which is read-only in Express 5.
@@ -46,6 +45,7 @@ app.use(sanitizeRequest);
 
 app.use("/api/auth", authRoutes);
 app.use("/auth", authRoutes);
+app.use("/api/jobs", jobRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/export", exportRoutes);
@@ -56,9 +56,15 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const startServer = async () => {
+  await connectDB();
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer();
 
 process.on("uncaughtException", (err) => {
   console.error("UNCAUGHT EXCEPTION:", err);

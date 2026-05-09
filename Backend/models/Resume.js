@@ -4,7 +4,16 @@ const resumeSchema = new mongoose.Schema({
 
  recruiter: {
   type: mongoose.Schema.Types.ObjectId,
-  ref: "User"
+  ref: "User",
+  required: true,
+  index: true
+ },
+
+ job: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Job",
+  required: true,
+  index: true
  },
 
  fileName: String,
@@ -15,6 +24,8 @@ const resumeSchema = new mongoose.Schema({
 
  aiScore: Number,
  aiData: Object,
+ aiMeta: Object,
+ analysisHash: String,
  jobDescription: String,
 
  createdAt: {
@@ -23,8 +34,9 @@ const resumeSchema = new mongoose.Schema({
  },
  status: {
   type: String,
+  enum: ["pending", "shortlisted", "rejected"],
   default: "pending"
-}
+ }
 
 });
 
