@@ -84,7 +84,7 @@ exports.updateStatus = async (req, res) => {
     const resume = await Resume.findOneAndUpdate(
       { _id: id, recruiter: req.user },
       { status },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!resume) {

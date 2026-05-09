@@ -56,7 +56,7 @@ exports.updateJob = async (req, res) => {
     const job = await Job.findOneAndUpdate(
       { _id: req.params.id, recruiter: req.user },
       update,
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!job) {
