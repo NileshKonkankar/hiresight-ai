@@ -46,13 +46,13 @@ flowchart TD
 
     Upload --> API
     API --> PDF
-    PDF --> DB : Save Extracted Text
+    PDF -->|Save Extracted Text| DB
     Input --> API
-    API --> Grok : Send JD + Resume Text
-    Grok --> API : Return Score, Rationale & Highlights
-    API --> DB : Update Candidate Records
-    DB --> API : Fetch Ranked Results
-    API --> UI : Display Transparent Match Analysis
+    API -->|Send JD + Resume Text| Grok
+    Grok -->|Return Score, Rationale & Highlights| API
+    API -->|Update Candidate Records| DB
+    DB -->|Fetch Ranked Results| API
+    API -->|Display Transparent Match Analysis| UI
 ```
 
 ## ⚙️ User Workflow
