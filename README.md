@@ -28,19 +28,19 @@ Beyond simply scoring, HireSight AI provides crystal-clear, AI-generated rationa
 
 ```mermaid
 flowchart TD
-    subgraph Frontend [Frontend (React + Tailwind)]
+    subgraph Frontend ["Frontend (React + Tailwind)"]
         UI[Recruiter Dashboard]
         Upload[Upload Resumes]
         Input[Enter Job Description]
     end
 
-    subgraph Backend [Backend (Node.js + Express)]
+    subgraph Backend ["Backend (Node.js + Express)"]
         API[API Gateway]
         PDF[pdfjs-dist Text Extractor]
         DB[(MongoDB)]
     end
 
-    subgraph AI [External Services]
+    subgraph AI ["External Services"]
         Grok["xAI Grok API"]
     end
 
