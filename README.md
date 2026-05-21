@@ -181,4 +181,6 @@ The application will build the backend Node.js server (`http://localhost:5000`) 
 - **Protected Routes**: React Router handles protected routing globally. Unauthenticated users cannot peek at `/dashboard` or `/upload` paths.
 - **Deployment**: Architecture ensures seamless communication between frontend (Vercel) and backend (Render).
 
+- [![CI/CD Pipeline](https://github.com/NileshKonkankar/hiresight-ai/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/NileshKonkankar/hiresight-ai/actions/workflows/ci.yml)
+
 *(This application was continuously refined with AI automation to be completely production-ready.)*
