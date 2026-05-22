@@ -52,6 +52,8 @@ exports.createJob = async (req, res) => {
       description: finalDescription.trim()
     });
 
+    await job.populate("jobDescription");
+
     await logAudit({
       recruiter: req.user,
       action: "job.created",
@@ -82,7 +84,7 @@ exports.updateJob = async (req, res) => {
       { _id: req.params.id, recruiter: req.user },
       update,
       { returnDocument: 'after' }
-    );
+    ).populate("jobDescription");
 
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
