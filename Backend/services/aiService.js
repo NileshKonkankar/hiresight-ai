@@ -1,23 +1,21 @@
-const OpenAI = require("openai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const modelName = process.env.OPENAI_MODEL || "gpt-5.5-2026-04-23";
+const modelName = process.env.GEMINI_MODEL || "gemini-3.5-flash";
 const PROMPT_VERSION = "resume-rubric-v2";
-let openaiClient;
+let genAI;
 
-function getOpenAIClient() {
-  if (!process.env.OPENAI_API_KEY) {
-    const error = new Error("OPENAI_API_KEY is not configured");
+function getGeminiClient() {
+  if (!process.env.GEMINI_API_KEY) {
+    const error = new Error("GEMINI_API_KEY is not configured");
     error.code = "AI_CONFIG_MISSING";
     throw error;
   }
 
-  if (!openaiClient) {
-    openaiClient = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+  if (!genAI) {
+    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   }
 
-  return openaiClient;
+  return genAI;
 }
 
 const clampScore = (value) => {
@@ -86,17 +84,23 @@ RESUME:
 ${resumeText}
 `;
 
-  const response = await getOpenAIClient().chat.completions.create({
+  const client = getGeminiClient();
+  const model = client.getGenerativeModel({
     model: modelName,
-    messages: [
-      { role: "system", content: "You return only valid JSON for a hiring decision-support rubric." },
-      { role: "user", content: prompt },
-    ],
-    temperature: 0.2,
-    response_format: { type: "json_object" },
+    systemInstruction: "You return only valid JSON for a hiring decision-support rubric.",
+    generationConfig: {
+      responseMimeType: "application/json",
+      temperature: 0.2,
+    }
   });
 
-  const content = response.choices[0].message.content;
+  const result = await model.generateContent({
+    contents: [
+      { role: "user", parts: [{ text: prompt }] }
+    ]
+  });
+
+  const content = result.response.text();
 
   return normalizeAiResult(JSON.parse(content));
 }

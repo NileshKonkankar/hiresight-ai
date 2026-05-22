@@ -14,8 +14,8 @@ services:
       # Add other essential backend environment variables here, e.g.:
       # - MONGO_URI=your_mongodb_connection_string
       - JWT_SECRET=replace_with_a_secure_secret
-      - XAI_API_KEY=your_xai_api_key
-      - XAI_MODEL=llama-3.3-70b-versatile
+      - GEMINI_API_KEY=your_gemini_api_key
+      - GEMINI_MODEL=gemini-2.5-flash
 
   frontend:
     build:

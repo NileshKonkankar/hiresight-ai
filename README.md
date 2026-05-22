@@ -41,15 +41,15 @@ flowchart TD
     end
 
     subgraph AI ["External Services"]
-        Grok["xAI Grok API"]
+        Gemini["Google Gemini API"]
     end
 
     Upload --> API
     API --> PDF
     PDF -->|Save Extracted Text| DB
     Input --> API
-    API -->|Send JD + Resume Text| Grok
-    Grok -->|Return Score, Rationale & Highlights| API
+    API -->|Send JD + Resume Text| Gemini
+    Gemini -->|Return Score, Rationale & Highlights| API
     API -->|Update Candidate Records| DB
     DB -->|Fetch Ranked Results| API
     API -->|Display Transparent Match Analysis| UI
@@ -62,7 +62,7 @@ sequenceDiagram
     actor Recruiter
     participant UI as Frontend App
     participant API as Node API
-    participant AI as Grok AI
+    participant AI as Gemini AI
     participant DB as MongoDB
 
     Recruiter->>UI: Upload Candidate Resumes (PDFs)
@@ -91,7 +91,7 @@ sequenceDiagram
 ## ✨ Features
 
 - **Automated Resume Parsing**: Securely upload resumes (PDF) and let the application extract the core information reliably using `pdfjs-dist`.
-- **Semantic Ranking**: Paste your technical and non-technical Job Description. The integrated xAI Grok AI model creates a detailed summary and ranks applicants dynamically.
+- **Semantic Ranking**: Paste your technical and non-technical Job Description. The integrated Google Gemini AI model creates a detailed summary and ranks applicants dynamically.
 - **Transparent Match Analysis**: The system provides a custom "Selection Rationale" and explicit "Match Highlights", showing recruiters exactly *why* a candidate was selected by mapping resume snippets directly to JD requirements.
 - **Premium User Experience**: Designed with modern web aesthetics in mind, featuring responsive light and dark mode toggles, styling with Tailwind CSS, glassmorphic cards, and smooth CSS micro-animations.
 - **Actionable Insights**: Export candidate reports directly to CSV, sort top applicants globally, and seamlessly update application statuses.
@@ -104,7 +104,7 @@ sequenceDiagram
 - **Frontend**: React.js, Vite, Tailwind CSS v3, React Router DOM, Axios
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB / Mongoose
-- **AI Integration**: xAI Grok API for advanced NLP logic
+- **AI Integration**: Google Gemini API for advanced NLP logic
 - **File Parsing**: `pdfjs-dist` for robust PDF text extraction
 - **Authentication**: Custom JSON Web Tokens (JWT) & bcrypt
 - **DevOps & CI/CD**: Docker, Docker Compose, Nginx, GitHub Actions
@@ -118,7 +118,7 @@ Getting the application running locally is extremely straightforward.
 ### 1. Prerequisites
 - Node.js (v16+)
 - MongoDB Atlas cluster or local MongoDB instance
-- xAI API Key
+- Google Gemini API Key
 
 ### 2. Environment Setup
 
@@ -128,7 +128,7 @@ Navigate to the `Backend` directory and duplicate `.env.example` into a new `.en
 cd Backend
 cp .env.example .env
 ```
-Fill out the variables in `.env` with your actual MongoDB URI, a secure JWT Secret, and your xAI API Key (e.g., `XAI_API_KEY`).
+Fill out the variables in `.env` with your actual MongoDB URI, a secure JWT Secret, and your Google Gemini API Key (e.g., `GEMINI_API_KEY`).
 
 **Frontend Configuration:**
 Navigate to the `Frontend` directory and ensure the `.env` file is pointing to your local (or production) backend API:
