@@ -1,6 +1,6 @@
 const OpenAI = require("openai");
 
-const modelName = process.env.OPENAI_MODEL || "gpt-5.4-nano";
+const modelName = process.env.OPENAI_MODEL || "gpt-5";
 const PROMPT_VERSION = "resume-rubric-v2";
 let openaiClient;
 
