@@ -85,11 +85,59 @@ ${resumeText}
 `;
 
   const client = getGeminiClient();
+  const rankingSchema = {
+    type: "OBJECT",
+    properties: {
+      skillMatch: { type: "INTEGER", description: "Score from 0-100 based on skills matching the job description." },
+      experienceMatch: { type: "INTEGER", description: "Score from 0-100 based on experience matching the job description." },
+      educationMatch: { type: "INTEGER", description: "Score from 0-100 based on education matching the job description." },
+      overallScore: { type: "INTEGER", description: "Overall suitability score from 0-100." },
+      confidence: { type: "INTEGER", description: "Confidence score from 0-100 based on direct evidence." },
+      selectionRationale: { type: "STRING", description: "1-2 sentences grounded in JD-vs-resume evidence." },
+      matchHighlights: {
+        type: "ARRAY",
+        items: {
+          type: "OBJECT",
+          properties: {
+            requirement: { type: "STRING", description: "A core requirement specifically from the JD." },
+            candidateHighlight: { type: "STRING", description: "Specific resume evidence proving or supporting this." }
+          },
+          required: ["requirement", "candidateHighlight"]
+        },
+        description: "Exactly 3 match highlights where evidence exists."
+      },
+      missingRequirements: {
+        type: "ARRAY",
+        items: { type: "STRING" },
+        description: "Important JD requirements with little or no evidence."
+      },
+      riskFlags: {
+        type: "ARRAY",
+        items: { type: "STRING" },
+        description: "Job-relevant concerns only (e.g. unclear years of experience or missing certification)."
+      },
+      summary: { type: "STRING", description: "Summary, 2 lines max." }
+    },
+    required: [
+      "skillMatch",
+      "experienceMatch",
+      "educationMatch",
+      "overallScore",
+      "confidence",
+      "selectionRationale",
+      "matchHighlights",
+      "missingRequirements",
+      "riskFlags",
+      "summary"
+    ]
+  };
+
   const model = client.getGenerativeModel({
     model: modelName,
     systemInstruction: "You return only valid JSON for a hiring decision-support rubric.",
     generationConfig: {
       responseMimeType: "application/json",
+      responseSchema: rankingSchema,
       temperature: 0.2,
     }
   });
@@ -101,8 +149,17 @@ ${resumeText}
   });
 
   const content = result.response.text();
+  let cleanedContent = content.trim();
+  if (cleanedContent.startsWith("```")) {
+    cleanedContent = cleanedContent.replace(/^```(?:json)?\s*/i, "").replace(/```$/, "").trim();
+  }
 
-  return normalizeAiResult(JSON.parse(content));
+  try {
+    return normalizeAiResult(JSON.parse(cleanedContent));
+  } catch (parseError) {
+    console.error("Failed to parse Gemini response JSON. Raw content was:\n", content);
+    throw new Error(`AI generated invalid JSON: ${parseError.message}. Raw output preview: ${content.slice(0, 300)}...`);
+  }
 }
 
 module.exports = {
