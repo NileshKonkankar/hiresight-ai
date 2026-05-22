@@ -28,7 +28,7 @@ export default function Upload() {
           setSelectedJobId(selectedJob._id);
         }
       } catch {
-        setNotice("Could not load jobs. Create a requisition on the dashboard first.");
+        setNotice("Could not load roles. Create a role on the dashboard first.");
       }
     };
 
@@ -73,7 +73,7 @@ export default function Upload() {
   const handleUpload = async () => {
     if (files.length === 0) return;
     if (!selectedJobId) {
-      setNotice("Select a requisition before uploading resumes.");
+      setNotice("Select a role before uploading resumes.");
       return;
     }
 
@@ -131,7 +131,7 @@ export default function Upload() {
         <div className="mb-6">
           <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">Upload Resumes</h2>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Add candidate PDFs to a specific requisition for scoped review and ranking.
+            Add candidate PDFs to a specific role for scoped review and ranking.
           </p>
         </div>
 
@@ -145,7 +145,7 @@ export default function Upload() {
           <div className="mb-5 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400" htmlFor="job-select">
-                Requisition
+                Role / Job Description
               </label>
               <select
                 id="job-select"
@@ -153,14 +153,14 @@ export default function Upload() {
                 onChange={(e) => setSelectedJobId(e.target.value)}
                 className="glass-input w-full rounded-md px-3 py-2.5 text-sm font-medium"
               >
-                <option value="">Select a requisition</option>
+                <option value="">Select a role</option>
                 {jobs.map((job) => (
                   <option key={job._id} value={job._id}>{job.title}</option>
                 ))}
               </select>
             </div>
             <button type="button" onClick={() => navigate("/dashboard")} className="secondary-button">
-              Create Requisition
+              Create Role
             </button>
           </div>
 

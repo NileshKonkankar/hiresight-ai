@@ -7,11 +7,6 @@ const jobSchema = new mongoose.Schema({
     required: true,
     index: true
   },
-  jobDescription: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "JobDescription",
-    index: true
-  },
   title: {
     type: String,
     required: true,
