@@ -1,4 +1,5 @@
 const Job = require("../models/Job");
+const JobDescription = require("../models/JobDescription");
 const Resume = require("../models/Resume");
 const logAudit = require("../services/auditService");
 
@@ -6,7 +7,7 @@ const isPresentString = (value) => typeof value === "string" && value.trim().len
 
 exports.listJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ recruiter: req.user }).sort({ updatedAt: -1 });
+    const jobs = await Job.find({ recruiter: req.user }).populate("jobDescription").sort({ updatedAt: -1 });
     res.json(jobs);
   } catch (error) {
     res.status(500).json({ message: "Failed to load jobs" });
@@ -15,16 +16,40 @@ exports.listJobs = async (req, res) => {
 
 exports.createJob = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, jobDescriptionId } = req.body;
 
-    if (!isPresentString(title) || !isPresentString(description)) {
-      return res.status(400).json({ message: "Job title and description are required" });
+    let finalTitle = title;
+    let finalDescription = description;
+    let finalJdId = jobDescriptionId;
+
+    if (jobDescriptionId) {
+      const jd = await JobDescription.findOne({ _id: jobDescriptionId, recruiter: req.user });
+      if (!jd) {
+        return res.status(404).json({ message: "Job description template not found" });
+      }
+      finalDescription = jd.description;
+      if (!finalTitle || !finalTitle.trim()) {
+        finalTitle = jd.title;
+      }
+    } else {
+      if (!isPresentString(title) || !isPresentString(description)) {
+        return res.status(400).json({ message: "Job title and description are required" });
+      }
+      const jd = await JobDescription.create({
+        recruiter: req.user,
+        title: title.trim(),
+        description: description.trim()
+      });
+      finalJdId = jd._id;
+      finalTitle = title.trim();
+      finalDescription = description.trim();
     }
 
     const job = await Job.create({
       recruiter: req.user,
-      title: title.trim(),
-      description: description.trim()
+      jobDescription: finalJdId,
+      title: finalTitle.trim(),
+      description: finalDescription.trim()
     });
 
     await logAudit({

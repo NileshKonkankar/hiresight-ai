@@ -1,15 +1,10 @@
 const mongoose = require("mongoose");
 
-const jobSchema = new mongoose.Schema({
+const jobDescriptionSchema = new mongoose.Schema({
   recruiter: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-    index: true
-  },
-  jobDescription: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "JobDescription",
     index: true
   },
   title: {
@@ -23,13 +18,7 @@ const jobSchema = new mongoose.Schema({
     required: true,
     trim: true,
     maxlength: 20000
-  },
-  status: {
-    type: String,
-    enum: ["open", "paused", "closed"],
-    default: "open",
-    index: true
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model("Job", jobSchema);
+module.exports = mongoose.model("JobDescription", jobDescriptionSchema);
