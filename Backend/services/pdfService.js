@@ -8,14 +8,23 @@ if (typeof globalThis.Path2D === "undefined") {
     globalThis.Path2D = class Path2D {};
 }
 
-const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
+let pdfjsLibPromise = null;
+
+function getPdfjsLib() {
+    if (!pdfjsLibPromise) {
+        pdfjsLibPromise = import("pdfjs-dist/legacy/build/pdf.mjs");
+    }
+    return pdfjsLibPromise;
+}
 
 async function extractText(buffer) {
     try {
         const uint8Array = new Uint8Array(buffer);
+        const pdfjsLib = await getPdfjsLib();
 
         const loadingTask = pdfjsLib.getDocument({
-            data: uint8Array
+            data: uint8Array,
+            isEvalSupported: false // Active defense hardening against CVE-2024-4367
         });
 
         const pdf = await loadingTask.promise;
