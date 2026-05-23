@@ -45,6 +45,13 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
+// Strict rate limiting for Authentication to prevent brute-force attacks
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // limit each IP to 20 auth requests per windowMs
+  message: "Too many authentication attempts, please try again after 15 minutes"
+});
+
 // Body parser, reading data from body into req.body, with a size limit
 app.use(express.json({ limit: "64kb" }));
 
@@ -52,9 +59,8 @@ app.use(express.json({ limit: "64kb" }));
 // The third-party middleware assigns req.query, which is read-only in Express 5.
 app.use(sanitizeRequest);
 
-
-app.use("/api/auth", authRoutes);
-app.use("/auth", authRoutes);
+app.use("/api/auth", authLimiter, authRoutes);
+app.use("/auth", authLimiter, authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/ai", aiRoutes);
