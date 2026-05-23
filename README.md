@@ -1,5 +1,7 @@
 # HireSight AI 🚀
 
+[![CI/CD Pipeline](https://github.com/NileshKonkankar/hiresight-ai/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/NileshKonkankar/hiresight-ai/actions/workflows/ci.yml)
+
 HireSight AI is an intelligent, modern applicant tracking and resume ranking platform built to streamline the hiring process.
 
 ## ⚠️ The Problem
@@ -181,7 +183,3 @@ The application will build the backend Node.js server (`http://localhost:5000`) 
 - **Interceptors**: The application uses Axios interceptors to persistently attach Bearer tokens. If a token expires (401 response), the system unconditionally clears local storage and cleanly kicks the user back to the login gateway.
 - **Protected Routes**: React Router handles protected routing globally. Unauthenticated users cannot peek at `/dashboard` or `/upload` paths.
 - **Deployment**: Architecture ensures seamless communication between frontend (Vercel) and backend (Render).
-
-- [![CI/CD Pipeline](https://github.com/NileshKonkankar/hiresight-ai/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/NileshKonkankar/hiresight-ai/actions/workflows/ci.yml)
-
-*(This application was continuously refined with AI automation to be completely production-ready.)*
